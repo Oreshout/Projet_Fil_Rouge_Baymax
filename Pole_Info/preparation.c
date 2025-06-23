@@ -10,7 +10,9 @@
 *
 */
 
-void LED_update(int pi)
+int pi;
+
+void led_update()
 {
     set_mode(pi, LED_pin, PI_OUTPUT); // Met le GPIO 20 en mode sortie pour la LED
 
@@ -23,7 +25,7 @@ void LED_update(int pi)
     }
 }
 
-void Bouton_update(int pi)
+void Bouton_update()
 {
     set_mode(pi, Bouton_pin, PI_INPUT); // Met le GPIO 21 en mode entrée
     set_pull_up_down(pi, Bouton_pin, PI_PUD_DOWN); // Active la résistance de rappel sur le GPIO 20
@@ -41,7 +43,7 @@ void Bouton_update(int pi)
     }
 }
 
-void servo_update(int pi){
+void servo_update(){
 
     set_mode(pi, servo_pin, PI_OUTPUT);
     set_servo_pulsewidth(pi, servo_pin, 500);
@@ -52,7 +54,7 @@ void servo_update(int pi){
     sleep(1);
 }
 
-void distance_update(int pi)
+void distance_update()
 {
      while (true) 
      { // Boucle infinie du programme
@@ -66,17 +68,60 @@ void distance_update(int pi)
     }
 }
 
+void motor_update(MotorController motorL, MotorController motorR)
+{
+
+    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+
+    sleep(1);
+    printf("je sors du drive\n");
+
+    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+    gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
+
+    gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
+    gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
+
+    sleep(1);
+
+    gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
+    gpio_write(pi, GPIO_BACKWARD_R, PI_LOW);
+}
+
 int main(){
-    int pi = pigpio_start(NULL, NULL);
+    pi = pigpio_start(NULL, NULL);
+
+    float kp = 4.0f; // Valeurs conseillées pour le contrôleur PI
+    float ki = 2.0f;
+
+    float speed = 50.f;
+
+    MotorController motorL; // Création de lobjet contrôleur moteur
+    MotorController_init(&motorL, pi, GPIO_FORWARD_L, GPIO_BACKWARD_L, GPIO_MOTOR_CONTROL_L); // Initialisation du contrôleur moteur
+
+    MotorController motorR; // Création de lobjet contrôleur moteur
+    MotorController_init(&motorR, pi, GPIO_FORWARD_R, GPIO_BACKWARD_R, GPIO_MOTOR_CONTROL_R); // Initialisation du contrôleur moteur
+
+    MotorController_setStartPower(&motorL, 110);
+    MotorController_setController(&motorL, kp, ki);
+
+    MotorController_setStartPower(&motorR, 110);
+    MotorController_setController(&motorR, kp, ki);
+
+    MotorController_stop(&motorL);
+    MotorController_stop(&motorR);
 
     printf("starting led \n");
-    LED_update(pi);
+    led_update();
+    printf("starting button \n");
+    Bouton_update();
+    printf("starting servo \n");
+    servo_update();
     printf("starting motor \n");
-    Bouton_update(pi);
-    servo_update(pi);
-    //motor_update()
+    motor_update(motorL, motorR);
     printf("starting distance \n");
-    distance_update(pi);
-    printf("All updates done \n");
+    distance_update();
+    printf("all tests completed \n");
     return 0;
 }
