@@ -21,13 +21,13 @@ void LED_update(LED_pin)
     int boucle = 0;
     set_mode(pi, LED_pin PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
 
-    while (boucle < 5)
+    for(int i = 0; i < 5; i++)
     {
         gpio_write(pi, LED_pin, PI_HIGH); // Envoi un signal "HAUT" sur le GPIO 16 pour l'allumer
         sleep(1);
         gpio_write(pi, LED_pin, PI_LOW); // Envoi un signal "BAS" sur le GPIO16 pour l'éteindre
         sleep(1);
-        boucle++;
+        i++;
     }
 }
 
