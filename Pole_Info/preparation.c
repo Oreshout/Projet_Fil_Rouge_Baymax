@@ -27,7 +27,6 @@ void LED_update(LED_pin)
         sleep(1);
         gpio_write(pi, LED_pin, PI_LOW); // Envoi un signal "BAS" sur le GPIO16 pour l'éteindre
         sleep(1);
-        i++;
     }
 }
 
