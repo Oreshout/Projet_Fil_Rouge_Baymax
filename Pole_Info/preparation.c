@@ -12,7 +12,6 @@
 
 void LED_update(int pi)
 {
-    int boucle = 0;
     set_mode(pi, LED_pin, PI_OUTPUT); // Met le GPIO 20 en mode sortie pour la LED
 
     for(int i = 0; i < 5; i++)
@@ -53,18 +52,18 @@ void servo_update(int pi){
     sleep(1);
 }
 
-void distance_update(int pi){
-
+void distance_update(int pi)
+{
      while (true) 
      { // Boucle infinie du programme
 
         struct marker *markers = get_markers(51); // Récupération des marqueurs de 51mm de côté (à modifier en fonction de vos marqueurs !)
         struct marker *m;
-        for (m = markers; m->id != -1; m++) { // Pour tous les marqueurs trouvés...
+        for (m = markers; m->id != -1; m++) 
+        { // Pour tous les marqueurs trouvés...
             printf("Marqueur trouvé: numéro %d à %dcm de distance. x=%d y=%d\n", m->id, m->z, m->x, m->y);
         }
     }
-    return 0;
 }
 
 int main(){
@@ -77,7 +76,7 @@ int main(){
     servo_update(pi);
     //motor_update()
     printf("starting distance \n");
-    distance_update(pi)
+    distance_update(pi);
     printf("All updates done \n");
     return 0;
 }
