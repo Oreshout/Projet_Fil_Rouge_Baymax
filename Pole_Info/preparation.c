@@ -39,11 +39,17 @@ void Bouton_update(Bouton_pin)
     while (1) 
     {
         int state = gpio_read(pi, Bouton_pin); // Lecture de l'état du bouton poussoir
-        if (state == PI_HIGH) { // Si le GPIO a reçu un "HAUT"
+        
+        if (state == PI_HIGH) 
+        { // Si le GPIO a reçu un "HAUT"
             printf("Le bouton poussoir sur le GPIO 20 est enclenché\n");
-        } else if (state == PI_LOW) { // Si le GPIO a reçu un "BAS"
+        } 
+        else if (state == PI_LOW) 
+        { // Si le GPIO a reçu un "BAS"
             printf("Le bouton poussoir sur le GPIO 20 est relaché\n");
-        } else { // Ne devrait pas exister
+        } 
+        else 
+        { // Ne devrait pas exister
             printf("Le GPIO 16 est dans un état inconnu\n");
         }
         sleep(1);
