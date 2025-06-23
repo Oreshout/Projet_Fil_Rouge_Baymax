@@ -7,13 +7,7 @@
 *       Bouton pin : 20
 *
 */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-int LED_pin = 21;
-int Bouton_pin = 20;
+#include <settings.h>
 
 
 void LED_update(LED_pin)
