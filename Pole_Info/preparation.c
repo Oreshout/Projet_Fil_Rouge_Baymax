@@ -35,7 +35,7 @@ void Bouton_update(Bouton_pin)
     set_mode(pi, Bouton_pin, PI_INPUT); // Met le GPIO 20 en mode entrée
     set_pull_up_down(pi, Bouton_pin, PI_PUD_DOWN); // Active la résistance de rappel sur le GPIO 20
 
-    while (1) 
+    while (true) 
     {
         int state = gpio_read(pi, Bouton_pin); // Lecture de l'état du bouton poussoir
         
