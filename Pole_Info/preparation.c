@@ -42,17 +42,15 @@ void Bouton_update(Bouton_pin)
         
         if (state == PI_HIGH) 
         { // Si le GPIO a reçu un "HAUT"
-            printf("Le bouton poussoir sur le GPIO 20 est enclenché\n");
+            printf("Bouton apuyer\n");
+            break;
         } 
-        else if (state == PI_LOW) 
-        { // Si le GPIO a reçu un "BAS"
-            printf("Le bouton poussoir sur le GPIO 20 est relaché\n");
-        } 
-        else 
-        { // Ne devrait pas exister
-            printf("Le GPIO 16 est dans un état inconnu\n");
-        }
         sleep(1);
     }
 }
 
+int main(){
+    LED_update();
+    Bouton_update();
+    return 0;
+}
