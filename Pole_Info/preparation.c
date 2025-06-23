@@ -12,29 +12,33 @@
 #include <string.h>
 #include <stdbool.h>
 
-void LED_update()
+int LED_pin = 21;
+int Bouton_pin = 20;
+
+
+void LED_update(LED_pin)
 {
     int boucle = 0;
-    set_mode(pi, 21, PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
+    set_mode(pi, LED_pin PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
 
     while (boucle < 5)
     {
-        gpio_write(pi, 21, PI_HIGH); // Envoi un signal "HAUT" sur le GPIO 16 pour l'allumer
+        gpio_write(pi, LED_pin, PI_HIGH); // Envoi un signal "HAUT" sur le GPIO 16 pour l'allumer
         sleep(1);
-        gpio_write(pi, 21, PI_LOW); // Envoi un signal "BAS" sur le GPIO16 pour l'éteindre
+        gpio_write(pi, LED_pin, PI_LOW); // Envoi un signal "BAS" sur le GPIO16 pour l'éteindre
         sleep(1);
         boucle++;
     }
 }
 
-void Bouton_update()
+void Bouton_update(Bouton_pin)
 {
-    set_mode(pi, 20, PI_INPUT); // Met le GPIO 20 en mode entrée
-    set_pull_up_down(pi, 20, PI_PUD_DOWN); // Active la résistance de rappel sur le GPIO 20
+    set_mode(pi, Bouton_pin, PI_INPUT); // Met le GPIO 20 en mode entrée
+    set_pull_up_down(pi, Bouton_pin, PI_PUD_DOWN); // Active la résistance de rappel sur le GPIO 20
 
     while (1) 
     {
-        int state = gpio_read(pi, 20); // Lecture de l'état du bouton poussoir
+        int state = gpio_read(pi, Bouton_pin); // Lecture de l'état du bouton poussoir
         if (state == PI_HIGH) { // Si le GPIO a reçu un "HAUT"
             printf("Le bouton poussoir sur le GPIO 20 est enclenché\n");
         } else if (state == PI_LOW) { // Si le GPIO a reçu un "BAS"
