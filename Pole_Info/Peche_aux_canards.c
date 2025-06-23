@@ -1,6 +1,0 @@
-/**
-*
-*
-*    CODE : Pêche aux canards
-*
-*/
