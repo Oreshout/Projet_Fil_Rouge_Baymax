@@ -42,6 +42,17 @@ void Bouton_update(int pi)
     }
 }
 
+void servo_update(int pi){
+
+    set_mode(pi, servo_pin, PI_OUTPUT);
+    set_servo_pulsewidth(pi, servo_pin, 500);
+    sleep(1);
+
+    set_mode(pi, servo_pin, PI_OUTPUT);
+    set_servo_pulsewidth(pi, servo_pin, 2500);
+    sleep(1);
+}
+
 int main(){
     int pi = pigpio_start(NULL, NULL);
 
@@ -49,7 +60,7 @@ int main(){
     LED_update(pi);
     printf("starting motor \n");
     Bouton_update(pi);
-    //servoMotor_update();
+    servo_update(pi);
     //motor_update()
     //distance_update()
     return 0;

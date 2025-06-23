@@ -30,6 +30,8 @@
 #define LED_pin 20
 #define Bouton_pin 21
 
+#define servo_pin 13
+
 // ===================== Button =====================
 typedef struct Button
 {
