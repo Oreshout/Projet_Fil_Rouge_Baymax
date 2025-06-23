@@ -84,11 +84,11 @@ typedef struct MotorController
 
 typedef struct Marker
 {
-   int id; 
-    int x;
-    int y;
-    int z;
-    int pitch; 
-    int roll; 
-    int yaw; 
+   int id;      // l’id du marqueur
+    int x;      // Sa position sur l’axe X en cm
+    int y;      // Sa position sur l’axe Y en cm
+    int z;      // Sa position sur l’axe Z en cm
+    int pitch;  // Sa rotation (axe tangage) en degré
+    int roll;   // Sa rotation (axe roulis) en degré
+    int yaw;    // Sa rotation (axe lacet) en degré
 } Marker;
