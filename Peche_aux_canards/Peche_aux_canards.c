@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "settings_PecheAuxCanards.h"
 
 /**
 *
@@ -44,5 +44,6 @@ void GestionBouton()
 
 int main()
 {
-    
+    pi = pigpio_start(NULL, NULL);
+
 }
