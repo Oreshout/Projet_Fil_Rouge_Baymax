@@ -7,6 +7,7 @@
 *
 */
 
+int pi;
 
 int DetectionMarker()
 {
@@ -26,7 +27,9 @@ void GestionBras()
 
 void GestionServoMoteur()
 {
-
+    set_mode(pi, servo_pin, PI_OUTPUT);
+    set_servo_pulsewidth(pi, servo_pin, 500); // Position initiale
+    sleep(1);
 }
 
 void GestionMoteur()

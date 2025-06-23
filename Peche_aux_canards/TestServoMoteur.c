@@ -5,7 +5,7 @@ int pi = pigpio_start(NULL, NULL); // Démarre la bibliothèque pigpio
 void test(pi)
 {
     set_mode(pi, servo_pin, PI_OUTPUT);
-    set_servo_pulsewidth(pi, servo_pin, 500); // Position initiale
+    set_servo_pulsewidth(pi, servo_pin, 1000); // Position initiale
     sleep(5);
 }
 
