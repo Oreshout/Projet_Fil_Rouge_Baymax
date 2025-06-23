@@ -10,7 +10,7 @@
 *
 */
 
-void LED_update(LED_pin)
+void LED_update()
 {
     int boucle = 0;
     set_mode(pi, LED_pin PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
@@ -24,7 +24,7 @@ void LED_update(LED_pin)
     }
 }
 
-void Bouton_update(Bouton_pin)
+void Bouton_update()
 {
     set_mode(pi, Bouton_pin, PI_INPUT); // Met le GPIO 20 en mode entrée
     set_pull_up_down(pi, Bouton_pin, PI_PUD_DOWN); // Active la résistance de rappel sur le GPIO 20
