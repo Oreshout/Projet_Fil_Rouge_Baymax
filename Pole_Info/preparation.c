@@ -9,9 +9,8 @@
 *       Bouton pin : 20
 *
 */
-int pi = pigpio_start(NULL, NULL);
 
-void LED_update()
+void LED_update(int pi)
 {
     int boucle = 0;
     set_mode(pi, LED_pin, PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
@@ -25,7 +24,7 @@ void LED_update()
     }
 }
 
-void Bouton_update()
+void Bouton_update(int pi)
 {
     set_mode(pi, Bouton_pin, PI_INPUT); // Met le GPIO 20 en mode entrée
     set_pull_up_down(pi, Bouton_pin, PI_PUD_DOWN); // Active la résistance de rappel sur le GPIO 20
@@ -44,8 +43,10 @@ void Bouton_update()
 }
 
 int main(){
-    LED_update();
-    Bouton_update();
+    int pi = pigpio_start(NULL, NULL);
+
+    LED_update(pi);
+    Bouton_update(pi);
     //servoMotor_update();
     //motor_update()
     //distance_update()
