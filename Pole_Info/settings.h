@@ -8,60 +8,101 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <unistd.h>
 #include <pigpiod_if2.h>
 #include <fcntl.h>
-//#include <linux/joystick.h>
-
 
 //------------------------------------------------------------------------------
-// Définition des GPIO
-
+// GPIO definitions
 #define GPIO_BACKWARD_L 25
 #define GPIO_BACKWARD_R 17
 #define GPIO_FORWARD_L 23
 #define GPIO_FORWARD_R 22
-
 #define GPIO_MOTOR_CONTROL_L 24
 #define GPIO_MOTOR_CONTROL_R 16
-
 #define GPIO_LED 26
 #define GPIO_BUTTON 6
 
-//------------------------------------------------------------------------------
-// Prototypes de pigpiod pour dev en local
+// Vitesse minimale acceptée par un moteur asservi. 
+#define MIN_SPEED 10.f
 
-typedef void (*CBFuncEx_t)
-    (int pi, unsigned user_gpio, unsigned level, uint32_t tick, void *userdata);
-
-/*
-int pigpio_start(const char *addrStr, const char *portStr);
-void pigpio_stop(int pi);
-
-int set_mode(int pi, unsigned gpio, unsigned mode);
-int set_pull_up_down(int pi, unsigned gpio, unsigned pud);
-
-int callback_ex(int pi, unsigned user_gpio, unsigned edge, CBFuncEx_t f, void *userdata);
-int callback_cancel(unsigned callback_id);
-
-uint32_t get_current_tick(int pi);
-int gpio_write(int pi, unsigned gpio, unsigned level);
-int gpio_trigger(int pi, unsigned user_gpio, unsigned pulseLen, unsigned level);
-
-int set_PWM_dutycycle(int pi, unsigned user_gpio, unsigned dutycycle);
-int get_PWM_dutycycle(int pi, unsigned user_gpio);
-*/
-
-#define PI_LOW 0
-#define PI_HIGH 1
-#define PI_INPUT 0
-#define PI_OUTPUT 1
-#define RISING_EDGE 0
-#define FALLING_EDGE 1
-#define EITHER_EDGE 2
-#define PI_PUD_OFF 0
-#define PI_PUD_DOWN 1
-#define PI_PUD_UP 2*
+//Les PINs que l'on utilise
 #define LED_pin 21
 #define Bouton_pin 20
+
+// ===================== Button =====================
+typedef struct Button
+{
+    int m_pi;
+    int m_gpio;
+    int m_callbackID;
+    bool m_isPressed;
+    int m_prevCbCount;
+    int m_currCbCount;
+} Button;
+void Button_init(Button *self, int pi, int gpio);
+void Button_quit(Button *self);
+void Button_update(Button *self);
+bool Button_isPressed(Button *self);
+
+// ===================== LED =====================
+typedef struct LED
+{
+    int m_pi;
+    int m_gpio;
+    uint32_t m_accu;
+    uint32_t m_prevUpdateTick;
+    uint32_t m_cycleTime;
+    int m_cycleCount;
+    int m_cycleIndex;
+} LED;
+void LED_init(LED *self, int pi, int gpio);
+void LED_quit(LED *self);
+void LED_update(LED *self);
+void LED_blink(LED *self, int count, float cycleTime);
+bool LED_isBlinking(LED *self);
+
+// ===================== MotorController =====================
+typedef struct MotorController
+{
+    int m_pi;
+    int m_gpioControl;
+    int m_gpioForward;
+    int m_gpioBackward;
+    int m_gpioMotor;
+    int m_callbackID;
+    int m_cbCount;
+    int m_controllerCbCount;
+    float m_kp;
+    float m_ki;
+    float m_integral;
+    float m_targetSpeed;
+    float m_speed;
+    int m_power;
+    int m_startPower;
+    uint32_t m_prevCbTick;
+    uint32_t m_prevUpdateTick;
+    int m_errorCount;
+    float m_saturationTime;
+} MotorController;
+void MotorController_init(MotorController *self, int pi, int gpioForward, int gpioBackward, int gpioControl);
+void MotorController_quit(MotorController *self);
+void MotorController_update(MotorController *self);
+void MotorController_stop(MotorController *self);
+void MotorController_setTargetSpeed(MotorController *self, float speed);
+void MotorController_setController(MotorController *self, float kp, float ki);
+void MotorController_setStartPower(MotorController *self, int startPower);
+void MotorController_setBackward(MotorController *self, bool goBackward);
+float MotorController_getSpeed(MotorController *self);
+float MotorController_getDistance(MotorController *self);
+void turn(MotorController *left, MotorController *right, int slotCount, float speed);
+void drive(MotorController *left, MotorController *right, int slotCount, float speed);
+
+
+// ===================== Tools =====================
+int Int_clampAB(int value, int a, int b);
+float Float_clamp01(float value);
+float Float_clampAB(float value, float a, float b);
+float Float_lerp(float value0, float value1, float t);
+float Float_invLerp(float value0, float value1, float value);
+float Float_remap(float src0, float src1, float dst0, float dst1, float value);
