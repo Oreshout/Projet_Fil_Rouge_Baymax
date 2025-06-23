@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <pigpiod_if2.h>
 #include <fcntl.h>
+#include "esieabot-ai.h"
 
 //------------------------------------------------------------------------------
 // GPIO definitions

@@ -53,6 +53,20 @@ void servo_update(int pi){
     sleep(1);
 }
 
+void distance_update(int pi){
+
+     while (true) 
+     { // Boucle infinie du programme
+        
+        struct marker *markers = get_markers(51); // Récupération des marqueurs de 51mm de côté (à modifier en fonction de vos marqueurs !)
+        struct marker *m;
+        for (m = markers; m->id != -1; m++) { // Pour tous les marqueurs trouvés...
+            printf("Marqueur trouvé: numéro %d à %dcm de distance. x=%d y=%d\n", m->id, m->z, m->x, m->y);
+        }
+    }
+    return 0;
+}
+
 int main(){
     int pi = pigpio_start(NULL, NULL);
 
