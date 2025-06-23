@@ -17,9 +17,9 @@ void LED_update(int pi)
     for(int i = 0; i < 5; i++)
     {
         gpio_write(pi, LED_pin, PI_HIGH); // Envoi un signal "HAUT" sur le GPIO 16 pour l'allumer
-        sleep(1);
+        usleep(500000); // ?   Pause de 500ms
         gpio_write(pi, LED_pin, PI_LOW); // Envoi un signal "BAS" sur le GPIO16 pour l'éteindre
-        sleep(1);
+        usleep(500000); // ?   Pause de 500ms
     }
 }
 
