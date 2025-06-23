@@ -4,7 +4,7 @@
 *
 *
 *    CODE : Pêche aux canards
-*
+*   * Attention : Revoir droite Gauche pour les servos
 */
 
 int pi;
