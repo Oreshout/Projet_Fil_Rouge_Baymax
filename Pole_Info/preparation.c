@@ -58,7 +58,6 @@ void distance_update()
 {
      while (true) 
      { // Boucle infinie du programme
-
         struct marker *markers = get_markers(51); // Récupération des marqueurs de 51mm de côté (à modifier en fonction de vos marqueurs !)
         struct marker *m;
         for (m = markers; m->id != -1; m++) 
