@@ -1,3 +1,5 @@
+#include <settings.h>
+
 /**
 *
 *
@@ -7,8 +9,6 @@
 *       Bouton pin : 20
 *
 */
-#include <settings.h>
-
 
 void LED_update(LED_pin)
 {

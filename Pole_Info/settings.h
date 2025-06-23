@@ -11,8 +11,9 @@
 
 #include <unistd.h>
 #include <pigpiod_if2.h>
-#include <linux/joystick.h>
 #include <fcntl.h>
+//#include <linux/joystick.h>
+
 
 //------------------------------------------------------------------------------
 // Définition des GPIO
@@ -28,17 +29,13 @@
 #define GPIO_LED 26
 #define GPIO_BUTTON 6
 
-#define GPIO_TRIG_L 10
-#define GPIO_ECHO_L 9
-#define GPIO_TRIG_R 5
-#define GPIO_ECHO_R 13
-
 //------------------------------------------------------------------------------
 // Prototypes de pigpiod pour dev en local
 
 typedef void (*CBFuncEx_t)
     (int pi, unsigned user_gpio, unsigned level, uint32_t tick, void *userdata);
 
+/*
 int pigpio_start(const char *addrStr, const char *portStr);
 void pigpio_stop(int pi);
 
@@ -54,6 +51,7 @@ int gpio_trigger(int pi, unsigned user_gpio, unsigned pulseLen, unsigned level);
 
 int set_PWM_dutycycle(int pi, unsigned user_gpio, unsigned dutycycle);
 int get_PWM_dutycycle(int pi, unsigned user_gpio);
+*/
 
 #define PI_LOW 0
 #define PI_HIGH 1
