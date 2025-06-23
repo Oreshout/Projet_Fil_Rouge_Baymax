@@ -35,7 +35,7 @@ void Bouton_update(int pi)
         
         if (state == PI_HIGH) 
         { // Si le GPIO a reçu un "HAUT"
-            printf("Bouton apuyer\n");
+            printf("Bouton apuyé\n");
             break;
         } 
         sleep(1);
