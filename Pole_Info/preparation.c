@@ -52,5 +52,8 @@ void Bouton_update(Bouton_pin)
 int main(){
     LED_update();
     Bouton_update();
+    //servoMotor_update();
+    //motor_update()
+    //distance_update()
     return 0;
 }
