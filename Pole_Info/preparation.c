@@ -57,7 +57,7 @@ void distance_update(int pi){
 
      while (true) 
      { // Boucle infinie du programme
-        
+
         struct marker *markers = get_markers(51); // Récupération des marqueurs de 51mm de côté (à modifier en fonction de vos marqueurs !)
         struct marker *m;
         for (m = markers; m->id != -1; m++) { // Pour tous les marqueurs trouvés...
@@ -76,6 +76,8 @@ int main(){
     Bouton_update(pi);
     servo_update(pi);
     //motor_update()
-    //distance_update()
+    printf("starting distance \n");
+    distance_update(pi)
+    printf("All updates done \n");
     return 0;
 }

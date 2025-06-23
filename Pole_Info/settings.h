@@ -79,3 +79,16 @@ typedef struct MotorController
     int m_errorCount;
     float m_saturationTime;
 } MotorController;
+
+// ===================== Marker =====================
+
+typedef struct Marker
+{
+   int id; 
+    int x;
+    int y;
+    int z;
+    int pitch; 
+    int roll; 
+    int yaw; 
+} Marker;
