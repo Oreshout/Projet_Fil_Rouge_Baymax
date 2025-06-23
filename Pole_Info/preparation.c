@@ -5,15 +5,15 @@
 *
 *      PREPARATION A FAIRE JOUR 1 
 *
-*       LED pin : 21
-*       Bouton pin : 20
+*       LED pin : 20
+*       Bouton pin : 21
 *
 */
 
 void LED_update(int pi)
 {
     int boucle = 0;
-    set_mode(pi, LED_pin, PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
+    set_mode(pi, LED_pin, PI_OUTPUT); // Met le GPIO 20 en mode sortie pour la LED
 
     for(int i = 0; i < 5; i++)
     {
@@ -26,7 +26,7 @@ void LED_update(int pi)
 
 void Bouton_update(int pi)
 {
-    set_mode(pi, Bouton_pin, PI_INPUT); // Met le GPIO 20 en mode entrée
+    set_mode(pi, Bouton_pin, PI_INPUT); // Met le GPIO 21 en mode entrée
     set_pull_up_down(pi, Bouton_pin, PI_PUD_DOWN); // Active la résistance de rappel sur le GPIO 20
 
     while (true) 
@@ -45,7 +45,9 @@ void Bouton_update(int pi)
 int main(){
     int pi = pigpio_start(NULL, NULL);
 
+    printf("starting led \n");
     LED_update(pi);
+    printf("starting motor \n");
     Bouton_update(pi);
     //servoMotor_update();
     //motor_update()

@@ -27,8 +27,8 @@
 #define MIN_SPEED 10.f
 
 //Les PINs que l'on utilise
-#define LED_pin 21
-#define Bouton_pin 20
+#define LED_pin 20
+#define Bouton_pin 21
 
 // ===================== Button =====================
 typedef struct Button
