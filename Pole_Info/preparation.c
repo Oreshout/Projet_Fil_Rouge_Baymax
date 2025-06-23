@@ -9,11 +9,12 @@
 *       Bouton pin : 20
 *
 */
+int pi = pigpio_start(NULL, NULL);
 
 void LED_update()
 {
     int boucle = 0;
-    set_mode(pi, LED_pin PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
+    set_mode(pi, LED_pin, PI_OUTPUT); // Met le GPIO 21 en mode sortie pour la LED
 
     for(int i = 0; i < 5; i++)
     {
