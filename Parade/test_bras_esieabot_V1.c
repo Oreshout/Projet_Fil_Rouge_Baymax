@@ -44,7 +44,7 @@ int main(){
     sleep(1);
     printf("startig test\n");
     set_servo_to_min();
-    _sleep(5);
+    sleep(5);
     set_servo_to_max();
 
     
