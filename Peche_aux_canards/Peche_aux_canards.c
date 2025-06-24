@@ -97,7 +97,17 @@ void GestionAttrape()
 
 void GestionMouvementRobot(MotorController motorL, MotorController motorR)
 {
-  
+    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+
+    sleep(1); // Avance pendant 1 seconde
+
+    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+
+    usleep(200000); // Tourne à gauche pendant 0.2 seconde
+
+    
 }
 
 int main()
