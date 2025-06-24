@@ -22,7 +22,7 @@ int DetectionMarker()
 
 void GestionBras()
 {
-
+    
 }
 
 void GestionServoMoteurHaut()
