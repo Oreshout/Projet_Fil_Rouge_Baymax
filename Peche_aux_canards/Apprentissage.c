@@ -94,6 +94,40 @@ void MotorController_setTargetSpeed(MotorController *self, float speed)
     }
 }
 
+void MotorController_update(MotorController *self)
+{
+    assert(self && self->m_pi >= 0 && "The MotorController must be initialized");
+    
+    if(self->m_targetSpeed == 0){
+       return; 
+    }
+    
+    // TODO : calcul du PI si une nouvelle fente est détectée et vitesse cible suffisante
+    if(self->m_controllerCbCount > self->m_cbCount){
+        set_PWM_dutycycle(self->m_pi, self->m_gpioMotor, self->m_startPower);
+    }else{
+        float e = (self->m_targetSpeed - self->m_speed);
+        // TODO : Calcule le dt
+        float dt = (get_current_tick(self->m_pi)-self->m_prevUpdateTick)/1000000.f;
+        self->m_prevUpdateTick = get_current_tick(self->m_pi);
+        
+        // TODO : Calcule l'intégrale
+        self->m_integral += self->m_ki*(e * dt);
+
+        // TODO : Calcule la puissance avec le PI
+        self->m_power = self->m_kp*e + self->m_integral;
+
+        // TODO : Si saturation, increment de saturationTime
+        if (self->m_power >= 255)
+        {
+            self->m_saturationTime+=dt;
+        }
+
+        // TODO : commander le moteur avec la puissance calculée
+        set_PWM_dutycycle(self->m_pi, self->m_gpioMotor, self->m_power);
+
+    }
+}
 
 int main()
 {
@@ -108,10 +142,10 @@ int main()
     MotorController motorR; // Création de lobjet contrôleur moteur
     MotorController_init(&motorR, pi, GPIO_FORWARD_R, GPIO_BACKWARD_R, GPIO_MOTOR_CONTROL_R); // Initialisation du contrôleur moteur
 
-    MotorController_setStartPower(&motorL, 5);
+    MotorController_setStartPower(&motorL, 110);
     MotorController_setController(&motorL, kp, ki);
 
-    MotorController_setStartPower(&motorR, 5);
+    MotorController_setStartPower(&motorR, 110);
     MotorController_setController(&motorR, kp, ki);
 
     MotorController_stop(&motorL);
@@ -130,13 +164,15 @@ int main()
             printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker()); // Affiche la distance du marqueur détecté
             MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
             MotorController_setTargetSpeed(&motorR, 10.0f);
+            MotorController_update(&motorL);
+            MotorController_update(&motorR);
             usleep(100000); // Avance pendant 0.1 seconde
             DetectionMarker(); // Vérifie si un marqueur est détecté
             printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker());
             gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
             gpio_write(pi, GPIO_FORWARD_R, PI_LOW); 
             printf("Arrêt des moteurs après avoir détecté un marqueur.\n");
-            if(DetectionMarker() < 10) // Si le marqueur est à moins de 5 cm
+            if(DetectionMarker() < 5) // Si le marqueur est à moins de 5 cm
             {
                 printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
                 // Appel de la fonction pour attraper le marqueur
