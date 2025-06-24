@@ -158,6 +158,15 @@ void GestionMouvementRobot(MotorController motorL, MotorController motorR)
     drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
 }
 
+void AvancerUnPetitPeu(MotorController motorL, MotorController motorR)
+{
+    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+    usleep(200000); // Avance pendant 0.2 seconde
+    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+    gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
+}
+
 bool parcourirLeTab(TAB[30])
 {
     for(int i = 0; i < 30; i++)
@@ -202,7 +211,7 @@ int main()
                 gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
                 gpio_write(pi, GPIO_FORWARD_R, PI_LOW);  
                 
-                //? Fonction avancer un petit peu
+                AvancerUnPetitPeu(motorL, motorR); // Avance un petit peu pour se rapprocher du marqueur
 
                 GestionAttrape(); // Gestion de l'attrape du marqueur
 
@@ -224,17 +233,13 @@ int main()
                 MarkerIDTrouve++; // Incrémentation de l'ID du marqueur trouvé
             }
         }
-
-   
-
-
-
-
-
-
-      
+        else
+        {
+            while(DetectionMarkerExist() == false) // Tant qu'un marqueur est détecté
+            {
+               GestionMouvementRobot(motorL, motorR); // Gestion du mouvement du robot
+               usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide 
+            }
+        }
     }
-    
-
-
 }
