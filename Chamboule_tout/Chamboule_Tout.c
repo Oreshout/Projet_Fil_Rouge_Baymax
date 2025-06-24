@@ -50,6 +50,11 @@ void ActivationServoMoteur()
     sleep(5); // Attendre que le servo se positionne
 }
 
+void positionRobot()
+{
+
+}
+
 bool DistanceoOptimal()
 {
     if(distance == DISTANCE_TIR_OPTIMAL) // Si le marqueur est à la distance optimale
@@ -76,4 +81,12 @@ void Tir()
     {
         printf("Marqueur hors de portée pour un tir optimal.\n");
     }
+}
+
+
+int main()
+{
+    pi = pigpio_start(NULL, NULL); // Démarre la bibliothèque pigpio pour le contrôle des GPIO
+    
+    bool Touch = false;
 }
