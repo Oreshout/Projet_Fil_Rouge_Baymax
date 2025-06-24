@@ -14,7 +14,7 @@ void set_servo_to_max(){
 
 void gauche_droite(){
     set_servo_to_min();
-    sleep(0.5);
+    usleep(500000);
     set_servo_to_max();
 }
 
@@ -22,7 +22,7 @@ void drift(){
     gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
     gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
 
-    sleep(0.1);
+    usleep(100000);
 
     gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
     gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
@@ -30,7 +30,7 @@ void drift(){
     gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
     gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
 
-    sleep(0.1);
+    usleep(100000);
 
     gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
     gpio_write(pi, GPIO_BACKWARD_R, PI_LOW);
@@ -42,18 +42,18 @@ void triple_drift(){
         gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
         gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
 
-        sleep(0.1);
+        usleep(100000);
 
         gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
         gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
     }
-    sleep(0.3);
+    usleep(300000);
     for (int i = 0; i < 3; i++)
     {
         gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
         gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
 
-        sleep(0.1);
+        usleep(100000);
 
         gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
         gpio_write(pi, GPIO_BACKWARD_R, PI_LOW);
@@ -90,16 +90,16 @@ int main(){
     for (int i = 0; i < 5; i++)
     {
         gauche_droite();
-        sleep(0.3);
+        usleep(300000);
     }
 
     sleep(3);
     printf("drifting\n");
 
     drift();
-    sleep(0.2);
+    usleep(200000);
     drift();
-    sleep(0.2);
+    usleep(300000);
 
 
     sleep(3);
