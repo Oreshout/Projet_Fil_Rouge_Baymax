@@ -50,11 +50,25 @@ void ActivationServoMoteur()
     sleep(5); // Attendre que le servo se positionne
 }
 
+bool DistanceoOptimal()
+{
+    if(distance == DISTANCE_TIR_OPTIMAL) // Si le marqueur est à la distance optimale
+    {
+        printf("Marqueur à la distance optimale pour un tir.\n");
+        return true;
+    }
+    else
+    {
+        printf("Marqueur hors de portée pour un tir optimal.\n");
+        return false;
+    }
+}
+
 void Tir()
 {
     int distance = DetectionMarker();
 
-    if(distance == DISTANCE_TIR_OPTIMAL) // Si le marqueur est à la distance optimale
+    if(DistanceOptimal == true) // Si le marqueur est à la distance optimale
     {
        
     }
