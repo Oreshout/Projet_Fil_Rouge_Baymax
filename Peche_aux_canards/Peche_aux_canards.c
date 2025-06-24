@@ -20,9 +20,22 @@ int DetectionMarker()
     return distance;
 }
 
+bool DetectionMarkerExist()
+{
+    struct marker *DetectionMarker = getmarkers(30);
+    
+    if (DetectionMarker->id != -1) // Si un marqueur est détecté
+    {
+        printf("Marqueur trouvé: numéro %d à %dcm de distance. x=%d y=%d\n", DetectionMarker->id, DetectionMarker->z, DetectionMarker->x, DetectionMarker->y);
+        return true;
+    }
+    
+    return false;
+}
+
 void GestionBras()
 {
-    
+
 }
 
 void GestionServoMoteurHaut()
@@ -82,8 +95,49 @@ void GestionAttrape()
     }
 }
 
+void InitMoteur()
+{
+    float kp = 4.0f; // Valeurs conseillées pour le contrôleur PI
+    float ki = 2.0f;
+
+    float speed = 50.f;
+
+    MotorController motorL; // Création de l'objet contrôleur moteur
+    MotorController_init(&motorL, pi, GPIO_FORWARD_L, GPIO_BACKWARD_L, GPIO_MOTOR_CONTROL_L); // Initialisation du contrôleur moteur
+
+    MotorController motorR; // Création de l'objet contrôleur moteur
+    MotorController_init(&motorR, pi, GPIO_FORWARD_R, GPIO_BACKWARD_R, GPIO_MOTOR_CONTROL_R); // Initialisation du contrôleur moteur
+
+    MotorController_setStartPower(&motorL, 110);
+    MotorController_setController(&motorL, kp, ki);
+
+    MotorController_setStartPower(&motorR, 110);
+    MotorController_setController(&motorR, kp, ki);
+
+    MotorController_stop(&motorL);
+    MotorController_stop(&motorR);
+}
+
+void GestionMouvementRobot(MotorController motorL, MotorController motorR)
+{
+    turn(&motorL, &motorR, 360, 60.f);
+    usleep(200000); 
+    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
+    usleep(200000); 
+    turn(&motorL, &motorR, 90, 60.f); // Tourne à droite de 90 degrés
+    usleep(200000);
+    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
+    usleep(200000);
+    turn(&motorL, &motorR, -90, 60.f); // Tourne à gauche de 90 degrés
+    usleep(200000);
+    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
+}
+
 int main()
 {
     pi = pigpio_start(NULL, NULL);
+
+    InitMoteur(); // Initialisation des moteurs
+   
 
 }

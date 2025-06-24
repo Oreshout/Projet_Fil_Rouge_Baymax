@@ -47,3 +47,42 @@ typedef struct Marker
     int roll;   // Sa rotation (axe roulis) en degré
     int yaw;    // Sa rotation (axe lacet) en degré
 } Marker;
+
+// ===================== MotorController =====================
+typedef struct MotorController
+{
+    int m_pi;
+    int m_gpioControl;
+    int m_gpioForward;
+    int m_gpioBackward;
+    int m_gpioMotor;
+    int m_callbackID;
+    int m_cbCount;
+    int m_controllerCbCount;
+    float m_kp;
+    float m_ki;
+    float m_integral;
+    float m_targetSpeed;
+    float m_speed;
+    int m_power;
+    int m_startPower;
+    uint32_t m_prevCbTick;
+    uint32_t m_prevUpdateTick;
+    int m_errorCount;
+    float m_saturationTime;
+} MotorController;
+void MotorController_init(MotorController *self, int pi, int gpioForward, int gpioBackward, int gpioControl);
+void MotorController_quit(MotorController *self);
+void MotorController_update(MotorController *self);
+void MotorController_stop(MotorController *self);
+void MotorController_setTargetSpeed(MotorController *self, float speed);
+void MotorController_setController(MotorController *self, float kp, float ki);
+void MotorController_setStartPower(MotorController *self, int startPower);
+void MotorController_setBackward(MotorController *self, bool goBackward);
+float MotorController_getSpeed(MotorController *self);
+float MotorController_getDistance(MotorController *self);
+void turn(MotorController *left, MotorController *right, int slotCount, float speed);
+void drive(MotorController *left, MotorController *right, int slotCount, float speed);
+
+
+
