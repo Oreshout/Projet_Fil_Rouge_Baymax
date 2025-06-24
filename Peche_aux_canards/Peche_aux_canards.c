@@ -95,25 +95,8 @@ void GestionAttrape()
     }
 }
 
-void GestionMouvementRobot(MotorController motorL, MotorController motorR)
+void InitMoteur()
 {
-    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
-    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
-
-    sleep(1); // Avance pendant 1 seconde
-
-    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
-    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
-
-    usleep(200000); // Tourne à gauche pendant 0.2 seconde
-
-    
-}
-
-int main()
-{
-    pi = pigpio_start(NULL, NULL);
-
     float kp = 4.0f; // Valeurs conseillées pour le contrôleur PI
     float ki = 2.0f;
 
@@ -133,5 +116,28 @@ int main()
 
     MotorController_stop(&motorL);
     MotorController_stop(&motorR);
+}
+
+void GestionMouvementRobot(MotorController motorL, MotorController motorR)
+{
+    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+
+    sleep(1); // Avance pendant 1 seconde
+
+    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+
+    usleep(200000); // Tourne à gauche pendant 0.2 seconde
+
+
+}
+
+int main()
+{
+    pi = pigpio_start(NULL, NULL);
+
+    InitMoteur(); // Initialisation des moteurs
+   
 
 }
