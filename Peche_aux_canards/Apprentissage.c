@@ -1,5 +1,4 @@
 #include "settings_PecheAuxCanards.h"
-#include <pthread.h>
 
 int pi;
 
@@ -53,15 +52,27 @@ void* distance_update(void* arg)
     return NULL;
 }
 
-void gestionAttrape()
+void GestionAttrape()
 {
     // Implémentez ici la logique pour attraper le marqueur
     printf("Attrape du marqueur en cours...\n");
   
     set_mode(pi, servo_pin, PI_OUTPUT);
-    set_servo_pulsewidth(pi, servo_pin, 2000); // Position initiale 
+    set_servo_pulsewidth(pi, servo_pin, 1750); // Position initiale 
     usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
 }
+
+void GestionLache()
+{
+    // Implémentez ici la logique pour attraper le marqueur
+    printf("Attrape du marqueur en cours...\n");
+  
+    set_mode(pi, servo_pin, PI_OUTPUT);
+    set_servo_pulsewidth(pi, servo_pin, 1500); // Position initiale 
+    usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
+}
+
+
 
 
 int main()
@@ -124,6 +135,8 @@ int main()
             gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
             gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
             printf("Arrêt des moteurs après avoir avancé.\n");
+            GestionLache(); // Gestion du lâcher du marqueur
+            usleep(500000); // Pause de 0.5 seconde pour éviter une boucle
         }
 
     }
