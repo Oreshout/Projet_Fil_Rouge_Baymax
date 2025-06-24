@@ -50,6 +50,24 @@ void ActivationServoMoteur()
     sleep(5); // Attendre que le servo se positionne
 }
 
+void positionRobot(MotorController motorL, MotorController motorR)
+{
+    bool Touch = DetectionMarkerExist(); // Vérifie si un marqueur est détecté
+
+    if(Touch == false) // Si un marqueur est détecté
+    {
+        gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
+        gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
+        usleep(500000); // Avance pendant 0.5 seconde
+        turn(&motorL, &motorR, 90, 60.f); // Tourne à droite de 90 degrés  
+        usleep(500000); // Attendre 0.5 seconde pour le mouvement
+        drive(&motorL, &motorR,20.f, 60.f); // Avance à une vitesse de 60 cm/s sur 20cm
+        usleep(500000); // Attendre 0.5 seconde pour le mouvement
+        turn(&motorL, &motorR, -90, 60.f); // Tourne à droite de 90 degrés
+        usleep(500000); // Attendre 0.5 seconde pour le mouvement
+    }    
+}
+
 bool DistanceoOptimal()
 {
     if(distance == DISTANCE_TIR_OPTIMAL) // Si le marqueur est à la distance optimale
@@ -76,4 +94,12 @@ void Tir()
     {
         printf("Marqueur hors de portée pour un tir optimal.\n");
     }
+}
+
+
+int main()
+{
+    pi = pigpio_start(NULL, NULL); // Démarre la bibliothèque pigpio pour le contrôle des GPIO
+
+    bool Touch = false;
 }
