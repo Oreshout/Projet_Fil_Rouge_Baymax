@@ -15,7 +15,7 @@ int DetectionMarker()
     struct marker *DetectionMarker = get_markers(30);
    
     distance = DetectionMarker->z;
-    printf("Marqué à %d cm\n", distance);
+    printf("Detection : Marqué à %d cm\n", distance);
     
     return distance;
 }
@@ -26,7 +26,7 @@ bool DetectionMarkerExist()
     
     if (DetectionMarker->id != -1) // Si un marqueur est détecté
     {
-        printf("Marqueur trouvé: numéro %d à %dcm de distance. x=%d y=%d\n", DetectionMarker->id, DetectionMarker->z, DetectionMarker->x, DetectionMarker->y);
+        printf("BOOL : Marqueur trouvé: numéro %d à %dcm de distance. x=%d y=%d\n", DetectionMarker->id, DetectionMarker->z, DetectionMarker->x, DetectionMarker->y);
         return true;
     }
     
@@ -39,7 +39,7 @@ int GestionMarker()
     
     if (markers->id != -1) // Si un marqueur est détecté
     {
-        printf("Marqueur trouvé: numéro %d", markers->id);
+        printf("ID : Marqueur trouvé: numéro %d\n", markers->id);
     }
 
     return markers->id; // Retourne l'id du marqueur détecté
@@ -169,14 +169,16 @@ void AvancerUnPetitPeu(MotorController motorL, MotorController motorR)
 
 bool parcourirLeTab(int TAB[30])
 {
+    int temp = GestionMarker(); // Récupération de l'ID du marqueur
+
     for(int i = 0; i < 30; i++)
     {
-        if(TAB[i] != GestionMarker()) // Si l'ID du marqueur est différent de 0
+        if(TAB[i] == temp) // Si l'ID est déjà présent
         {
-            return true; // Un marqueur a été trouvé
+            return false; // Il est déjà dans le tableau
         }
     }
-    return false; // Aucun marqueur n'a été trouvé
+    return true; // Il n'est pas encore dans le tableau
 }
 
 int main()
@@ -198,24 +200,35 @@ int main()
 
     while(true)
     {
-        if(parcourirLeTab(TabRecupMerker) == false)
+        printf("je suis dans le while true");
+
+        if(parcourirLeTab(TabRecupMerker) == true)
         {
+            printf("Le Marker n'est pas dans le tableau, le robot va avancer.\n");
+
             if(DetectionMarkerExist() == true) // Si un marqueur est détecté
             {
-                distance = DetectionMarker(); // Récupération de la distance du marqueur
+                printf("Un marqueur a été détecté, le robot va avancer.\n");
 
-                while(distance > 5)
+                distance = DetectionMarker(); // Récupération de la distance du marqueur
+                printf("Distance du marqueur : %d cm\n", distance);
+
+                while(distance > 10)
                 {
+                    printf("Je suis rentré dans le While\n");
+
                     distance = DetectionMarker(); // Récupération de la distance du marqueur
                     gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
                     gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
                 }
-
+                usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                printf("Je suis sorti du While\n");
                 gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
                 gpio_write(pi, GPIO_FORWARD_R, PI_LOW);  
                 
+                printf("Je suis juste devant le Goblet\n");
                 AvancerUnPetitPeu(motorL, motorR); // Avance un petit peu pour se rapprocher du marqueur
-
+                printf("Je vais attraper le marqueur\n");
                 GestionAttrape(); // Gestion de l'attrape du marqueur
 
                 gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
@@ -223,7 +236,7 @@ int main()
                 usleep(500000); // Avance pendant 0.5 seconde
                 gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
                 gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
-
+                printf("Je vais lâcher le marqueur\n");
                 GestionLache(); // Gestion du lâcher du marqueur
 
                 gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
@@ -232,12 +245,19 @@ int main()
                 gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
                 gpio_write(pi, GPIO_BACKWARD_R, PI_LOW); // Arrêt des moteurs
 
-                TabRecupMerker[MarkerIDTrouve] = GestionMarker(); // Stockage de l'ID du marqueur dans le tableau
-                MarkerIDTrouve++; // Incrémentation de l'ID du marqueur trouvé
+                if (MarkerIDTrouve < 30) {
+                    TabRecupMerker[MarkerIDTrouve] = GestionMarker(); // Stockage de l'ID
+                    MarkerIDTrouve++;
+                }
+                else 
+                {
+                    printf(" Tableau plein ! Impossible d'ajouter plus de marqueurs.\n");
+                }            
             }
         }
         else
         {
+            printf("JE suis dans le else\n");
             while(DetectionMarkerExist() == false) // Tant qu'un marqueur est détecté
             {
                GestionMouvementRobot(motorL, motorR); // Gestion du mouvement du robot
