@@ -97,14 +97,16 @@ int main(){
     printf("drifting\n");
 
     drift();
-    usleep(200000);
+    usleep(500000);
     drift();
-    usleep(300000);
+    usleep(500000);
+    drift();
+    usleep(500000);
 
 
-    sleep(3);
-    printf("le grand final\n");
-    triple_drift();
+    //sleep(3);
+    //printf("le grand final\n");
+    //triple_drift();
 
     
 
