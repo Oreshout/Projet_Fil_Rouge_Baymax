@@ -120,21 +120,17 @@ void InitMoteur()
 
 void GestionMouvementRobot(MotorController motorL, MotorController motorR)
 {
-
     turn(&motorL, &motorR, 360, 60.f);
-    sleep(1); // Avance pendant 1 seconde
-
+    usleep(200000); 
     drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
-
     usleep(200000); 
     turn(&motorL, &motorR, 90, 60.f); // Tourne à droite de 90 degrés
     usleep(200000);
     drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
-    
-
-
-
-
+    usleep(200000);
+    turn(&motorL, &motorR, -90, 60.f); // Tourne à gauche de 90 degrés
+    usleep(200000);
+    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
 }
 
 int main()
