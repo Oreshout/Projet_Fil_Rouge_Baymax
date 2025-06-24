@@ -27,9 +27,12 @@
 // Vitesse minimale acceptée par un moteur asservi. 
 #define MIN_SPEED 10.f
 
-//Les PINs que l'on utilise
-#define LED_pin 20
-#define Bouton_pin 21
-
+// servo moteur
 #define servo_pinR 13
 #define servo_pinL 18
+
+// girlande led
+#define Girlande_1 21
+#define Girlande_2 20
+#define Girlande_3 26
+#define Girlande_4 19
