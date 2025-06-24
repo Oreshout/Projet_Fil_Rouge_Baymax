@@ -12,7 +12,7 @@ int pi;
 int DetectionMarker()
 {
     int distance = 0;
-    struct marker *DetectionMarker = getmarkers(30);
+    struct marker *DetectionMarker = get_markers(30);
    
     distance = DetectionMarker->z;
     printf("Marqué à %d cm\n", distance);
@@ -22,7 +22,7 @@ int DetectionMarker()
 
 bool DetectionMarkerExist()
 {
-    struct marker *DetectionMarker = getmarkers(30);
+    struct marker *DetectionMarker = get_markers(30);
     
     if (DetectionMarker->id != -1) // Si un marqueur est détecté
     {
@@ -147,15 +147,15 @@ void GestionMouvementRobot(MotorController motorL, MotorController motorR)
 {
     turn(&motorL, &motorR, 360, 60.f);
     usleep(200000); 
-    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
+    drive(&motorL, &motorR,20, 60.f); // Avance à une vitesse de 60 cm/s
     usleep(200000); 
     turn(&motorL, &motorR, 90, 60.f); // Tourne à droite de 90 degrés
     usleep(200000);
-    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
+    drive(&motorL, &motorR,20, 60.f); // Avance à une vitesse de 60 cm/s
     usleep(200000);
     turn(&motorL, &motorR, -90, 60.f); // Tourne à gauche de 90 degrés
     usleep(200000);
-    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
+    drive(&motorL, &motorR,20,  60.f); // Avance à une vitesse de 60 cm/s
 }
 
 void AvancerUnPetitPeu(MotorController motorL, MotorController motorR)
@@ -167,7 +167,7 @@ void AvancerUnPetitPeu(MotorController motorL, MotorController motorR)
     gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
 }
 
-bool parcourirLeTab(TAB[30])
+bool parcourirLeTab(int TAB[30])
 {
     for(int i = 0; i < 30; i++)
     {
@@ -185,6 +185,9 @@ int main()
     int TabRecupMerker[30];
     int MarkerIDTrouve = 0; // Initialisation de l'ID du marqueur
     int distance = 0; // Initialisation de la distance
+
+    MotorController motorL; // Création de l'objet contrôleur moteur
+    MotorController motorR; // Création de l'objet contrôleur moteur
 
     for(int i = 0; i < 30; i++)
     {

@@ -72,7 +72,6 @@ void InitMoteur()
 
 void GestionServoMoteurHaut() //! A travailler en fonction du schéma
 {
-    
     set_mode(pi, servo_pinR, PI_OUTPUT);
     set_mode(pi, servo_pinL, PI_OUTPUT);
     set_servo_pulsewidth(pi, servo_pinR, 1000); // Position initiale // ! RIGHT
