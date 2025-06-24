@@ -47,7 +47,7 @@ void triple_drift(){
         gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
         gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
     }
-    sleep(0.3)
+    sleep(0.3);
     for (int i = 0; i < 3; i++)
     {
         gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
@@ -84,16 +84,26 @@ int main(){
     MotorController_stop(&motorR);
 
     //programme principal
+    sleep(1);
+    printf("starting\n");
 
     for (int i = 0; i < 5; i++)
     {
         gauche_droite();
         sleep(0.3);
     }
+
+    sleep(3);
+    printf("drifting\n");
+
     drift();
     sleep(0.2);
     drift();
     sleep(0.2);
+
+
+    sleep(3);
+    printf("le grand final\n");
     triple_drift();
 
     
