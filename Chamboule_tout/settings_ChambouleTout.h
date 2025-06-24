@@ -32,7 +32,8 @@
 #define LED_pin 20
 #define Bouton_pin 21
 
-#define servo_pin 13
+#define servo_pin_Recharge 18
+#define servo_pin_Lancer 13
 
 // Tir Optimal
 #define DISTANCE_TIR_OPTIMAL 5 // Distance optimale pour tirer en cm
@@ -53,7 +54,7 @@ typedef struct Marker
 
 // ===================== MotorController =====================
 
-typedef struct MotorController
+/* typedef struct MotorController
 {
     int m_pi;
     int m_gpioControl;
@@ -86,6 +87,6 @@ void MotorController_setBackward(MotorController *self, bool goBackward);
 float MotorController_getSpeed(MotorController *self);
 float MotorController_getDistance(MotorController *self);
 void turn(MotorController *left, MotorController *right, int slotCount, float speed);
-void drive(MotorController *left, MotorController *right, int slotCount, float speed);
+void drive(MotorController *left, MotorController *right, int slotCount, float speed); */
 
 

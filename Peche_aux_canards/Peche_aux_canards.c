@@ -33,6 +33,18 @@ bool DetectionMarkerExist()
     return false;
 }
 
+int GestionMarker()
+{
+    struct marker *markers = get_markers(30); // Récupération des marqueurs de 51mm de côté (à modifier en fonction de vos marqueurs !)
+    
+    if (markers->id != -1) // Si un marqueur est détecté
+    {
+        printf("Marqueur trouvé: numéro %d", markers->id);
+    }
+
+    return markers->id; // Retourne l'id du marqueur détecté
+}
+
 void GestionBras()
 {
 
@@ -95,6 +107,19 @@ void GestionAttrape()
     }
 }
 
+void GestionLache()
+{
+    int distance = DetectionMarker();
+    
+    if (distance < 5) // Si le marqueur est à moins de 5 cm
+    {
+        GestionBras();
+        GestionServoMoteurBas();
+        sleep(1); // Attendre que le bras se positionne
+    }
+}
+
+
 void InitMoteur()
 {
     float kp = 4.0f; // Valeurs conseillées pour le contrôleur PI
@@ -133,11 +158,88 @@ void GestionMouvementRobot(MotorController motorL, MotorController motorR)
     drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
 }
 
+void AvancerUnPetitPeu(MotorController motorL, MotorController motorR)
+{
+    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+    usleep(200000); // Avance pendant 0.2 seconde
+    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+    gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
+}
+
+bool parcourirLeTab(TAB[30])
+{
+    for(int i = 0; i < 30; i++)
+    {
+        if(TAB[i] != GestionMarker()) // Si l'ID du marqueur est différent de 0
+        {
+            return true; // Un marqueur a été trouvé
+        }
+    }
+    return false; // Aucun marqueur n'a été trouvé
+}
+
 int main()
 {
     pi = pigpio_start(NULL, NULL);
+    int TabRecupMerker[30];
+    int MarkerIDTrouve = 0; // Initialisation de l'ID du marqueur
+    int distance = 0; // Initialisation de la distance
+
+    for(int i = 0; i < 30; i++)
+    {
+        TabRecupMerker[i] = 0; // Initialisation du tableau de marqueurs
+    }
 
     InitMoteur(); // Initialisation des moteurs
-   
 
+    while(true)
+    {
+        if(parcourirLeTab(TabRecupMerker) == false)
+        {
+            if(DetectionMarkerExist() == true) // Si un marqueur est détecté
+            {
+                distance = DetectionMarker(); // Récupération de la distance du marqueur
+
+                while(distance > 5)
+                {
+                    distance = DetectionMarker(); // Récupération de la distance du marqueur
+                    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+                    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+                }
+
+                gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+                gpio_write(pi, GPIO_FORWARD_R, PI_LOW);  
+                
+                AvancerUnPetitPeu(motorL, motorR); // Avance un petit peu pour se rapprocher du marqueur
+
+                GestionAttrape(); // Gestion de l'attrape du marqueur
+
+                gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+                gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+                usleep(500000); // Avance pendant 0.5 seconde
+                gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+                gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
+
+                GestionLache(); // Gestion du lâcher du marqueur
+
+                gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
+                gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
+                usleep(500000); // Recule pendant 0.5 seconde
+                gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
+                gpio_write(pi, GPIO_BACKWARD_R, PI_LOW); // Arrêt des moteurs
+
+                TabRecupMerker[MarkerIDTrouve] = GestionMarker(); // Stockage de l'ID du marqueur dans le tableau
+                MarkerIDTrouve++; // Incrémentation de l'ID du marqueur trouvé
+            }
+        }
+        else
+        {
+            while(DetectionMarkerExist() == false) // Tant qu'un marqueur est détecté
+            {
+               GestionMouvementRobot(motorL, motorR); // Gestion du mouvement du robot
+               usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide 
+            }
+        }
+    }
 }
