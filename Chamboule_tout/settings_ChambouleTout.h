@@ -32,7 +32,8 @@
 #define LED_pin 20
 #define Bouton_pin 21
 
-#define servo_pin 13
+#define servo_pin_Recharge 18
+#define servo_pin_Lancer 13
 
 // Tir Optimal
 #define DISTANCE_TIR_OPTIMAL 5 // Distance optimale pour tirer en cm
