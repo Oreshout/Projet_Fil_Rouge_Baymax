@@ -72,7 +72,27 @@ void GestionLache()
     usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
 }
 
-
+void MotorController_setTargetSpeed(MotorController *self, float speed)
+{
+    assert(self && self->m_pi >= 0 && "The MotorController must be initialized");
+    
+    if (speed < MIN_SPEED)
+    {
+        MotorController_stop(self);
+    }
+    else
+    {
+        if (self->m_targetSpeed < MIN_SPEED)
+        {
+            // Le moteur est actuelement arrêté
+            // Il faut le redémarrer
+            self->m_controllerCbCount = self->m_cbCount + 4;
+            self->m_integral = self->m_startPower;
+            self->m_power = self->m_startPower;
+        }
+        self->m_targetSpeed = speed;
+    }
+}
 
 
 int main()
@@ -88,10 +108,10 @@ int main()
     MotorController motorR; // Création de lobjet contrôleur moteur
     MotorController_init(&motorR, pi, GPIO_FORWARD_R, GPIO_BACKWARD_R, GPIO_MOTOR_CONTROL_R); // Initialisation du contrôleur moteur
 
-    MotorController_setStartPower(&motorL, 110);
+    MotorController_setStartPower(&motorL, 5);
     MotorController_setController(&motorL, kp, ki);
 
-    MotorController_setStartPower(&motorR, 110);
+    MotorController_setStartPower(&motorR, 5);
     MotorController_setController(&motorR, kp, ki);
 
     MotorController_stop(&motorL);
@@ -108,8 +128,8 @@ int main()
         {
             DetectionMarker(); // Vérifie si un marqueur est détecté
             printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker()); // Affiche la distance du marqueur détecté
-            gpio_write(pi, GPIO_FORWARD_L, PI_HIGH); // Avance les moteurs
-            gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+            MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+            MotorController_setTargetSpeed(&motorR, 10.0f);
             usleep(100000); // Avance pendant 0.1 seconde
             DetectionMarker(); // Vérifie si un marqueur est détecté
             printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker());
