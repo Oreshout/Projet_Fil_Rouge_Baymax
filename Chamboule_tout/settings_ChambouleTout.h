@@ -53,7 +53,7 @@ typedef struct Marker
 
 // ===================== MotorController =====================
 
-typedef struct MotorController
+/* typedef struct MotorController
 {
     int m_pi;
     int m_gpioControl;
@@ -86,6 +86,6 @@ void MotorController_setBackward(MotorController *self, bool goBackward);
 float MotorController_getSpeed(MotorController *self);
 float MotorController_getDistance(MotorController *self);
 void turn(MotorController *left, MotorController *right, int slotCount, float speed);
-void drive(MotorController *left, MotorController *right, int slotCount, float speed);
+void drive(MotorController *left, MotorController *right, int slotCount, float speed); */
 
 
