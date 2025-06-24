@@ -21,6 +21,20 @@ int DetectionMarker()
     return distance;
 }
 
+bool DetectionMarkerExist()
+{
+    struct marker *DetectionMarker = get_markers(30);
+    
+    if (DetectionMarker->id != -1) // Si un marqueur est détecté
+    {
+        printf("BOOL : Marqueur trouvé: numéro %d à %dcm de distance. x=%d y=%d\n", DetectionMarker->id, DetectionMarker->z, DetectionMarker->x, DetectionMarker->y);
+        return true;
+    }
+    
+    return false;
+}
+
+
 void* distance_update(void* arg)
 {
     while (1) 
@@ -67,26 +81,24 @@ int main()
 
     printf("Démarrage du programme de détection de marqueurs...\n");
 
-    pthread_t distanceThread;
-    pthread_create(&distanceThread, NULL, distance_update, NULL);
+  //? Ajout Distanceupdate
 
-    int detection = DetectionMarker(); // Appel de la fonction pour détecter un marqueur
-    printf("Distance détectée : %d cm\n", detection);
-    if(detection < 10)
+    while(true)
     {
-        printf("Le robot est trop proche du marqueur, il doit reculer.\n");
-        gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
-        gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
-        usleep(500000); // Recule pendant 0.5 seconde
-        gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
-        gpio_write(pi, GPIO_BACKWARD_R, PI_LOW); // Arrêt des moteurs
-    }
-    else
-    {
-        printf("Le robot est à une distance acceptable du marqueur.\n");
+        if(DetectionMarkerExist()) // Si un marqueur est détecté
+        {
+            DetectionMarker(); // Vérifie si un marqueur est détecté
+            printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker()); // Affiche la distance du marqueur détecté
+            gpio_write(pi, GPIO_FORWARD_L, PI_HIGH); // Avance les moteurs
+            gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+            usleep(500000); // Avance pendant 0.5 seconde
+            gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
+            gpio_write(pi, GPIO_FORWARD_R, PI_LOW); 
+            printf("Arrêt des moteurs après avoir détecté un marqueur.\n");
+        }
+
     }
 
-    pthread_join(distanceThread, NULL);
     pigpio_stop(pi); // Arrête la bibliothèque pigpio
     return 0; // Retourne 0 pour indiquer que le programme s'est terminé avec succès
 }
