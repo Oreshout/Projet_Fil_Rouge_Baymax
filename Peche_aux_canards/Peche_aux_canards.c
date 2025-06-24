@@ -120,20 +120,19 @@ void InitMoteur()
 
 void GestionMouvementRobot(MotorController motorL, MotorController motorR)
 {
-    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
-    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
 
+    turn(&motorL, &motorR, 360, 60.f);
     sleep(1); // Avance pendant 1 seconde
 
-    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
-    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
 
-    usleep(200000); // Tourne à gauche pendant 0.2 seconde
-
-    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
-    gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
-
+    usleep(200000); 
+    turn(&motorL, &motorR, 90, 60.f); // Tourne à droite de 90 degrés
+    usleep(200000);
+    drive(&motorL, &motorR, 60.f); // Avance à une vitesse de 60 cm/s
     
+
+
 
 
 }
