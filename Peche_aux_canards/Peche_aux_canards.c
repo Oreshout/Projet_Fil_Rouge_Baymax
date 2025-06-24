@@ -11,12 +11,19 @@ int pi;
 
 int DetectionMarker()
 {
-    int distance = 0;
-    struct marker *DetectionMarker = get_markers(30);
-   
-    distance = DetectionMarker->z;
-    printf("Detection : Marqué à %d cm\n", distance);
-    
+    int distance = -1;
+    struct marker *detection = get_markers(30);
+
+    if (detection != NULL && detection->id != -1) 
+    {
+        distance = detection->z;
+        printf("Detection : Marqué à %d cm\n", distance);
+    } 
+    else
+    {
+        printf("Detection : Aucun marqueur détecté\n");
+    }
+
     return distance;
 }
 
@@ -202,8 +209,8 @@ int main()
     {
         printf("je suis dans le while true");
 
-        if(parcourirLeTab(TabRecupMerker) == true)
-        {
+        //if(parcourirLeTab(TabRecupMerker) == true)
+        //{
             printf("Le Marker n'est pas dans le tableau, le robot va avancer.\n");
 
             if(DetectionMarkerExist() == true) // Si un marqueur est détecté
@@ -213,14 +220,15 @@ int main()
                 distance = DetectionMarker(); // Récupération de la distance du marqueur
                 printf("Distance du marqueur : %d cm\n", distance);
 
+                gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
+                gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+
                 while(distance > 10)
                 {
                     printf("Je suis rentré dans le While\n");
-
                     distance = DetectionMarker(); // Récupération de la distance du marqueur
-                    gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
-                    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
                 }
+                
                 usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
                 printf("Je suis sorti du While\n");
                 gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
@@ -254,7 +262,7 @@ int main()
                     printf(" Tableau plein ! Impossible d'ajouter plus de marqueurs.\n");
                 }            
             }
-        }
+        //}
         else
         {
             printf("JE suis dans le else\n");
