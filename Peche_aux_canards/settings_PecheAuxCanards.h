@@ -32,8 +32,7 @@
 #define LED_pin 20
 #define Bouton_pin 21
 
-#define servo_pinR 13
-#define servo_pinL 18
+#define servo_pin 13
 
 // ===================== Marker =====================
 

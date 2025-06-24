@@ -53,7 +53,15 @@ void* distance_update(void* arg)
     return NULL;
 }
 
-
+void gestionAttrape()
+{
+    // Implémentez ici la logique pour attraper le marqueur
+    printf("Attrape du marqueur en cours...\n");
+  
+    set_mode(pi, servo_pin, PI_OUTPUT);
+    set_servo_pulsewidth(pi, servo_pin, 2000); // Position initiale 
+    usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
+}
 
 
 int main()
@@ -91,10 +99,31 @@ int main()
             printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker()); // Affiche la distance du marqueur détecté
             gpio_write(pi, GPIO_FORWARD_L, PI_HIGH); // Avance les moteurs
             gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
-            usleep(500000); // Avance pendant 0.5 seconde
+            usleep(100000); // Avance pendant 0.1 seconde
+            DetectionMarker(); // Vérifie si un marqueur est détecté
+            printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker());
             gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
             gpio_write(pi, GPIO_FORWARD_R, PI_LOW); 
             printf("Arrêt des moteurs après avoir détecté un marqueur.\n");
+            if(DetectionMarker() < 10) // Si le marqueur est à moins de 5 cm
+            {
+                printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
+                // Appel de la fonction pour attraper le marqueur
+                GestionAttrape(); // Gestion de l'attrape du marqueur
+                usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                printf("Le marqueur a été attrapé.\n");
+            }
+            else
+            {
+                printf("Le marqueur est trop loin pour être attrapé.\n");
+            }
+        }
+        else
+        {
+            printf("Aucun marqueur détecté, le robot va avancer.\n");
+            gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
+            gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
+            printf("Arrêt des moteurs après avoir avancé.\n");
         }
 
     }
