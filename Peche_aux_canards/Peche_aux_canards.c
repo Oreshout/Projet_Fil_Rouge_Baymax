@@ -130,6 +130,11 @@ void GestionMouvementRobot(MotorController motorL, MotorController motorR)
 
     usleep(200000); // Tourne à gauche pendant 0.2 seconde
 
+    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
+    gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
+
+    
+
 
 }
 
