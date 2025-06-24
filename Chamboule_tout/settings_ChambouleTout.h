@@ -34,6 +34,10 @@
 
 #define servo_pin 13
 
+// Tir Optimal
+#define DISTANCE_TIR_OPTIMAL 5 // Distance optimale pour tirer en cm
+
+
 // ===================== Marker =====================
 
 typedef struct Marker

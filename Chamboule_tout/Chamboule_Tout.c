@@ -43,3 +43,23 @@ int DetectionMarker()
     return distance;
 }
 
+void ActivationServoMoteur()
+{
+    set_mode(pi, servo_pin, PI_OUTPUT); 
+    set_servo_pulsewidth(pi, servo_pin, 1000); // Position initiale
+    sleep(5); // Attendre que le servo se positionne
+}
+
+void Tir()
+{
+    int distance = DetectionMarker();
+
+    if(distance == DISTANCE_TIR_OPTIMAL) // Si le marqueur est à la distance optimale
+    {
+       
+    }
+    else
+    {
+        printf("Marqueur hors de portée pour un tir optimal.\n");
+    }
+}
