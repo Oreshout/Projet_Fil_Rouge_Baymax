@@ -2,6 +2,13 @@
 
 int pi;
 
+void initServoMoteur()
+{
+    set_mode(pi, servo_pin, PI_OUTPUT); // Met le GPIO du servo en mode sortie
+    set_servo_pulsewidth(pi, servo_pin, 1675); // Position initiale du servo
+    usleep(500000); // Pause de 0.5 seconde pour laisser le temps au servo de se positionner
+}
+
 int DetectionMarker()
 {
     int distance = -1;
@@ -58,7 +65,7 @@ void GestionAttrape()
     printf("Attrape du marqueur en cours...\n");
   
     set_mode(pi, servo_pin, PI_OUTPUT);
-    set_servo_pulsewidth(pi, servo_pin, 1750); // Position initiale 
+    set_servo_pulsewidth(pi, servo_pin, 2000); // Position initiale 
     usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
 }
 
@@ -68,7 +75,7 @@ void GestionLache()
     printf("Attrape du marqueur en cours...\n");
   
     set_mode(pi, servo_pin, PI_OUTPUT);
-    set_servo_pulsewidth(pi, servo_pin, 1500); // Position initiale 
+    set_servo_pulsewidth(pi, servo_pin, 1750); // Position initiale 
     usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
 }
 
@@ -93,6 +100,29 @@ void MotorController_setTargetSpeed(MotorController *self, float speed)
         self->m_targetSpeed = speed;
     }
 }
+
+void MotorController_setBackward(MotorController *self, bool goBackward)
+{
+    assert(self && self->m_pi >= 0 && "The MotorController must be initialized");
+    
+    // TODO : Attribution du bon gpio au gpiomotor en fonction de goBackward
+    //        Arret du moteur en cas de changement de sens de rotation
+    if (goBackward)
+    {
+        if(self->m_gpioMotor != self->m_gpioBackward){
+           MotorController_stop(self);
+            self->m_gpioMotor = self->m_gpioBackward; 
+        }
+        
+    }else{
+        if(self->m_gpioMotor != self->m_gpioForward){
+            MotorController_stop(self);
+            self->m_gpioMotor = self->m_gpioForward;
+        }
+        
+    }
+}
+
 
 void MotorController_update(MotorController *self)
 {
@@ -129,6 +159,41 @@ void MotorController_update(MotorController *self)
     }
 }
 
+void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *motorR)
+{
+    sleep(1); // Pause de 1 seconde pour éviter une boucle trop rapide
+    MotorController_setBackward(motorL, false); // ← AJOUTÉ
+    MotorController_setBackward(motorR, false);
+    MotorController_setTargetSpeed(motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+    MotorController_setTargetSpeed(motorR, 10.0f);
+    MotorController_update(motorL);
+    MotorController_update(motorR);
+    usleep(500000); // Avance pendant 0.5 seconde
+    MotorController_stop(motorL);
+    MotorController_stop(motorR);
+    MotorController_setBackward(motorL, true);
+    MotorController_setBackward(motorR, false); // Avance
+    MotorController_setTargetSpeed(motorL, 30.0f);
+    MotorController_setTargetSpeed(motorR, 30.0f);
+    MotorController_update(motorL);
+    MotorController_update(motorR);
+    usleep(100000); // 0.5s de rotation
+    MotorController_stop(motorL);
+    MotorController_stop(motorR);
+    sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+
+    printf("Aucun marqueur détecté, le robot avance.\n");
+}
+
+
+void MotorController_stop(MotorController *self)
+{
+    assert(self && self->m_pi >= 0 && "The MotorController must be initialized");
+    gpio_write(self->m_pi, self->m_gpioForward, PI_LOW);
+    gpio_write(self->m_pi, self->m_gpioBackward, PI_LOW);
+    self->m_targetSpeed = 0.f;
+}
+
 int main()
 {
     pi = pigpio_start(NULL, NULL); // Démarre la bibliothèque pigpio pour le contrôle des GPIO
@@ -151,8 +216,9 @@ int main()
     MotorController_stop(&motorL);
     MotorController_stop(&motorR);
 
+    initServoMoteur(); // Initialisation du servo moteur
 
-    printf("Démarrage du programme de détection de marqueurs...\n");
+    printf("\033[1;31mDémarrage du programme de détection de marqueurs...\033[0m\n");
 
   //? Ajout Distanceupdate
 
@@ -161,37 +227,47 @@ int main()
         if(DetectionMarkerExist()) // Si un marqueur est détecté
         {
             DetectionMarker(); // Vérifie si un marqueur est détecté
-            printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker()); // Affiche la distance du marqueur détecté
-            MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+            printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
+            
+            /*MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
             MotorController_setTargetSpeed(&motorR, 10.0f);
             MotorController_update(&motorL);
             MotorController_update(&motorR);
-            usleep(100000); // Avance pendant 0.1 seconde
+            usleep(1000); // Avance pendant 0.1 seconde
             DetectionMarker(); // Vérifie si un marqueur est détecté
-            printf("Un marqueur a été détecté à %dcm.\n", DetectionMarker());
-            gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
-            gpio_write(pi, GPIO_FORWARD_R, PI_LOW); 
-            printf("Arrêt des moteurs après avoir détecté un marqueur.\n");
-            if(DetectionMarker() < 7) // Si le marqueur est à moins de 7 cm
+            printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
+            MotorController_stop(&motorL); // Arrêt des moteurs    
+            MotorController_stop(&motorR); // Arrêt des moteurs
+            printf("\033[1;33mArrêt des moteurs après avoir détecté un marqueur.\033[0m\n");*/
+
+            if(DetectionMarker() < 10) // Si le marqueur est à moins de 7 cm
             {
                 printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
                 // Appel de la fonction pour attraper le marqueur
+                MotorController_setBackward(&motorL, false); // Inverse le sens du moteur gauche
+                MotorController_setBackward(&motorR, false);
                 GestionAttrape(); // Gestion de l'attrape du marqueur
-                usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
-                 MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+                usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
                 MotorController_setTargetSpeed(&motorR, 10.0f);
                 MotorController_update(&motorL);
                 MotorController_update(&motorR);
-                usleep(100000); // Avance pendant 0.1 seconde
-                gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
-                gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
-                usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                usleep(10000); // Avance pendant 0.1 seconde
+                MotorController_stop(&motorL); // Arrêt des moteurs    
+                MotorController_stop(&motorR); // Arrêt des moteurs
+                usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
                 GestionLache(); // Gestion du lâcher du marqueur
-                gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH); // Avance pour lâcher le marqueur
-                gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
+                MotorController_setBackward(&motorL, true); // Inverse le sens du moteur gauche
+                MotorController_setBackward(&motorR, true); // Inverse le sens du moteur droit
+                MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+                MotorController_setTargetSpeed(&motorR, 10.0f);
+                MotorController_update(&motorL);
+                MotorController_update(&motorR);
+                printf("Le robot va reculer après avoir attrapé le marqueur.\n");
                 usleep(500000); // Avance pendant 0.5 seconde
-                gpio_write(pi, GPIO_BACKWARD_L, PI_LOW); // Arrêt des moteurs
-                gpio_write(pi, GPIO_BACKWARD_R, PI_LOW);
+                MotorController_stop(&motorL); // Arrêt des moteurs    
+                MotorController_stop(&motorR); // Arrêt des moteurs
+
 
                 printf("Le marqueur a été attrapé.\n");
             }
@@ -202,10 +278,11 @@ int main()
         }
         else
         {
-            printf("Aucun marqueur détecté, le robot va avancer.\n");
-            gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
-            gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
+            printf("\033[1;31mAucun marqueur détecté, le robot va avancer.\033[0m\n");
             printf("Arrêt des moteurs après avoir avancé.\n");
+            PatternMouvementSiAucunMarqueur(&motorL, &motorR); // Avance si aucun marqueur n'est détecté
+            printf("Je viens de faire le pattern de mouvement car aucun marqueur n'est détecté.\n");
+            printf("Le robot avance car aucun marqueur n'est détecté.\n");
             GestionLache(); // Gestion du lâcher du marqueur
             usleep(500000); // Pause de 0.5 seconde pour éviter une boucle
         }
