@@ -36,3 +36,8 @@
 #define Girlande_2 20
 #define Girlande_3 26
 #define Girlande_4 19
+
+//pin buzzer
+#define Buzz_1 21
+#define Buzz_2 20
+#define Buzz_3 16
