@@ -3,16 +3,9 @@
 
 #define NOTE_C4  262
 #define NOTE_D4  294
-#define NOTE_E4  330
-#define NOTE_F4  349
-#define NOTE_G4  392
-#define NOTE_A4  440
-#define NOTE_B4  494
-#define NOTE_C5  523
 #define REST     0
 
 #define NOTE_A3  220  // La3
-#define NOTE_AS3 233  // La#3 / Sib3
 #define NOTE_B3  247  // Si3
 
 int melody[] = {
@@ -21,12 +14,27 @@ int melody[] = {
     NOTE_D4, REST, NOTE_D4, REST, NOTE_D4, REST, 
     NOTE_D4, REST, NOTE_D4, REST
 };
-
 int durations[] = {
-    2, 6, 2, 4, 2, 2,
-    2, 4, 2, 6, 2, 6,
-    2, 6, 2, 4, 2, 4,
-    2, 2, 2, 6
+    25, 75, 25, 50, 25, 25, //noire - croche_pointé - croche
+    25, 50, 25, 75, 25, 75, //croche_pointé - noire - noire
+    25, 50, 25, 50, 25, 25, //croche_pointé - croche_pointé - croche
+    25, 25, 25, 25 //croche - croche
+};
+
+int durationsP2[] = {
+    25, 25, 25, 25, 25, 25, //croche - croche - croche
+    25, 0, 25, 25, 25, 0,   //double_croche - croche - double_croche
+    25, 25, 25, 25, 25, 25, //croche - croche - croche
+    25, 25, 25, 0, 25, 25,  //croche - double_croche - croche
+    25, 25, 25, 0, 25, 25,  //croche - double_croche - croche
+    25, 25, 25, 25, 25, 0,  //croche - croche - double_croche
+    25, 0                   //double_croche
+};
+int melodyP2[] = {
+    NOTE_C4, REST, NOTE_C4, REST, NOTE_D4, REST, 
+    NOTE_D4, REST, NOTE_D4, REST, NOTE_C4, REST, 
+    NOTE_D4, REST, NOTE_D4, REST, NOTE_D4, REST, 
+    NOTE_D4, REST, NOTE_D4, REST
 };
 
 int pi;
@@ -45,43 +53,6 @@ void playNote(int freq, int duration_ms) {
     }
 }
 
-/*void play2NotesBIS(int freq1, int freq2) {
-    gpioHardwarePWM(Buzz_1, freq1, 500000);  // 50% duty
-    gpioHardwarePWM(Buzz_3, freq2, 500000);  // 50% duty
-}*/
-
-void play2Notes(int freq1, int freq2, int duration_ms) {
-    int t_us = duration_ms * 1000;
-    int time_step = 50;  // résolution = 50 µs
-    int steps = t_us / time_step;
-
-    int toggle1 = 0, toggle2 = 0;
-    int acc1 = 0, acc2 = 0;
-    int period1 = (freq1 == REST) ? 0 : 1000000 / freq1 / 2;
-    int period2 = (freq2 == REST) ? 0 : 1000000 / freq2 / 2;
-
-    for (int i = 0; i < steps; i++) {
-        acc1 += time_step;
-        acc2 += time_step;
-
-        if (freq1 != REST && acc1 >= period1) {
-            toggle1 = !toggle1;
-            gpio_write(pi, Buzz_1, toggle1);
-            acc1 = 0;
-        }
-
-        if (freq2 != REST && acc2 >= period2) {
-            toggle2 = !toggle2;
-            gpio_write(pi, Buzz_3, toggle2);
-            acc2 = 0;
-        }
-
-        usleep(time_step);
-    }
-
-    gpio_write(pi, Buzz_1, PI_LOW);
-    gpio_write(pi, Buzz_3, PI_LOW);
-}
 
 int main(){
     pi = pigpio_start(NULL, NULL);
@@ -113,7 +84,7 @@ int main(){
     {
         for (int i = 0; i < 22; i++)
         {
-            playNote(melody[i], durations[i]*50);
+            playNote(melody[i], durations[i]*4);
         }
     }
 
