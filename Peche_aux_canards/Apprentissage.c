@@ -172,12 +172,27 @@ int main()
             gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
             gpio_write(pi, GPIO_FORWARD_R, PI_LOW); 
             printf("Arrêt des moteurs après avoir détecté un marqueur.\n");
-            if(DetectionMarker() < 5) // Si le marqueur est à moins de 5 cm
+            if(DetectionMarker() < 7) // Si le marqueur est à moins de 7 cm
             {
                 printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
                 // Appel de la fonction pour attraper le marqueur
                 GestionAttrape(); // Gestion de l'attrape du marqueur
                 usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                 MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+                MotorController_setTargetSpeed(&motorR, 10.0f);
+                MotorController_update(&motorL);
+                MotorController_update(&motorR);
+                usleep(100000); // Avance pendant 0.1 seconde
+                gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
+                gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
+                usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                GestionLache(); // Gestion du lâcher du marqueur
+                gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH); // Avance pour lâcher le marqueur
+                gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
+                usleep(500000); // Avance pendant 0.5 seconde
+                gpio_write(pi, GPIO_BACKWARD_L, PI_LOW); // Arrêt des moteurs
+                gpio_write(pi, GPIO_BACKWARD_R, PI_LOW);
+
                 printf("Le marqueur a été attrapé.\n");
             }
             else
