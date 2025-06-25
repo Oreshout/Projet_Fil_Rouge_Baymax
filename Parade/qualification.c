@@ -3,7 +3,24 @@
 #define NOTE_C4  262
 #define NOTE_D4  294
 
+#define REST     0
+
 int pi;
+
+void start_time()
+{
+    int startTime = get_current_tick(pi) % 1000000;
+    int time;
+    while (1)
+    {
+        time = get_current_tick(pi);
+        if (time % 1000000 > startTime)
+        {
+            printf("%d\n", time);
+            break;
+        }
+    }
+}
 
 void set_servo_to_min()
 {
@@ -26,24 +43,24 @@ void gauche_droite()
 
 void playNote(int freq, int duration_ms) {
     if (freq == REST) {
-        gpio_write(pi, Buzz_1, PI_LOW);
+        gpio_write(pi, 27, PI_LOW);
         usleep(duration_ms * 1000);
     } else {
         for (int i = 0; i < freq * duration_ms / 1000; i++) {
-            gpio_write(pi, Buzz_1, PI_HIGH);
+            gpio_write(pi, 27, PI_HIGH);
             usleep(500000 / freq);
-            gpio_write(pi, Buzz_1, PI_LOW);
+            gpio_write(pi, 27, PI_LOW);
             usleep(500000 / freq);
         }
     }
 }
 
-void gauche_droite()
+/*void gauche_droite()
 {
     set_servo_to_min();
     usleep(500000);
     set_servo_to_max();
-}
+}*/
 
 void bras_gauche_bas()
 {
@@ -146,6 +163,8 @@ int main()
     MotorController_stop(&motorL);
     MotorController_stop(&motorR);
 
+    start_time();
+
     // programme principal
     sleep(1);
     printf("démarage\n");
@@ -164,9 +183,9 @@ int main()
 
     sleep(1);
     printf("buzzer\n");
-    playNote(NOTE_C4, 400000);
+    playNote(NOTE_C4, 1000);
     usleep(800000);
-    playNote(NOTE_D4, 400000);
+    playNote(NOTE_D4, 1000);
 
     sleep(1);
     printf("final\n");
