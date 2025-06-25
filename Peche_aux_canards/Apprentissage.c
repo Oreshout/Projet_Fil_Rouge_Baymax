@@ -2,6 +2,13 @@
 
 int pi;
 
+void initServoMoteur()
+{
+    set_mode(pi, servo_pin, PI_OUTPUT); // Met le GPIO du servo en mode sortie
+    set_servo_pulsewidth(pi, servo_pin, 1675); // Position initiale du servo
+    usleep(500000); // Pause de 0.5 seconde pour laisser le temps au servo de se positionner
+}
+
 int DetectionMarker()
 {
     int distance = -1;
@@ -187,13 +194,6 @@ void MotorController_stop(MotorController *self)
     self->m_targetSpeed = 0.f;
 }
 
-void initServoMoteur()
-{
-    set_mode(pi, servo_pin, PI_OUTPUT); // Définit le mode du GPIO du servo moteur
-    set_servo_pulsewidth(pi, servo_pin, 1750); // Position initiale du servo moteur
-    usleep(500000); // Pause de 0.5 seconde pour laisser le temps au servo de se positionner
-}
-
 int main()
 {
     pi = pigpio_start(NULL, NULL); // Démarre la bibliothèque pigpio pour le contrôle des GPIO
@@ -228,7 +228,8 @@ int main()
         {
             DetectionMarker(); // Vérifie si un marqueur est détecté
             printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
-            MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+            
+            /*MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
             MotorController_setTargetSpeed(&motorR, 10.0f);
             MotorController_update(&motorL);
             MotorController_update(&motorR);
@@ -237,7 +238,8 @@ int main()
             printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
             MotorController_stop(&motorL); // Arrêt des moteurs    
             MotorController_stop(&motorR); // Arrêt des moteurs
-            printf("\033[1;33mArrêt des moteurs après avoir détecté un marqueur.\033[0m\n");
+            printf("\033[1;33mArrêt des moteurs après avoir détecté un marqueur.\033[0m\n");*/
+
             if(DetectionMarker() < 10) // Si le marqueur est à moins de 7 cm
             {
                 printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
