@@ -94,6 +94,29 @@ void MotorController_setTargetSpeed(MotorController *self, float speed)
     }
 }
 
+void MotorController_setBackward(MotorController *self, bool goBackward)
+{
+    assert(self && self->m_pi >= 0 && "The MotorController must be initialized");
+    
+    // TODO : Attribution du bon gpio au gpiomotor en fonction de goBackward
+    //        Arret du moteur en cas de changement de sens de rotation
+    if (goBackward)
+    {
+        if(self->m_gpioMotor != self->m_gpioBackward){
+           MotorController_stop(self);
+            self->m_gpioMotor = self->m_gpioBackward; 
+        }
+        
+    }else{
+        if(self->m_gpioMotor != self->m_gpioForward){
+            MotorController_stop(self);
+            self->m_gpioMotor = self->m_gpioForward;
+        }
+        
+    }
+}
+
+
 void MotorController_update(MotorController *self)
 {
     assert(self && self->m_pi >= 0 && "The MotorController must be initialized");
@@ -136,15 +159,18 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
     MotorController_update(motorL);
     MotorController_update(motorR);
     usleep(500000); // Avance pendant 0.5 seconde
-    gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
-    gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
-    MotorController_setTargetSpeed(motorL, 50.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
-    MotorController_stop(motorR); // Arrêt du moteur droit
+    MotorController_stop(motorL);
+    MotorController_stop(motorR);
+    MotorController_setBackward(motorL, true);
+    MotorController_setBackward(motorR, false); // Avance
+    MotorController_setTargetSpeed(motorL, 30.0f);
+    MotorController_setTargetSpeed(motorR, 30.0f);
     MotorController_update(motorL);
     MotorController_update(motorR);
-    usleep(200); // Avance pendant 0.5 seconde
-    MotorController_stop(motorL); // Arrêt des moteurs    
-    MotorController_stop(motorR); // Arrêt des moteurs
+    usleep(5000); // 0.5s de rotation
+    MotorController_stop(motorL);
+    MotorController_stop(motorR);
+    usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
 
     printf("Aucun marqueur détecté, le robot avance.\n");
 }
@@ -217,11 +243,11 @@ int main()
                 MotorController_stop(&motorR); // Arrêt des moteurs
                 usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
                 GestionLache(); // Gestion du lâcher du marqueur
-                gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
-                gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
-                printf("Le robot va reculer après avoir attrapé le marqueur.\n");
+                MotorController_setBackward(&motorL, true); // Inverse le sens du moteur gauche
+                MotorController_setBackward(&motorR, true); // Inverse le sens du moteur droit
                 MotorController_update(&motorL);
                 MotorController_update(&motorR);
+                printf("Le robot va reculer après avoir attrapé le marqueur.\n");
                 usleep(5000); // Avance pendant 0.5 seconde
                 MotorController_stop(&motorL); // Arrêt des moteurs    
                 MotorController_stop(&motorR); // Arrêt des moteurs
