@@ -131,17 +131,17 @@ void MotorController_update(MotorController *self)
 
 void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *motorR)
 {
-    MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
-    MotorController_setTargetSpeed(&motorR, 10.0f);
-    MotorController_update(&motorL);
-    MotorController_update(&motorR);
+    MotorController_setTargetSpeed(motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+    MotorController_setTargetSpeed(motorR, 10.0f);
+    MotorController_update(motorL);
+    MotorController_update(motorR);
     usleep(500000); // Avance pendant 0.5 seconde
     gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
     gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
-    MotorController_setTargetSpeed(&motorL, 50.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
-    MotorController_setTargetSpeed(&motorR, 10.0f);
-    MotorController_update(&motorL);
-    MotorController_update(&motorR);
+    MotorController_setTargetSpeed(motorL, 50.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+    MotorController_setTargetSpeed(motorR, 10.0f);
+    MotorController_update(motorL);
+    MotorController_update(motorR);
     usleep(500000); // Avance pendant 0.5 seconde
     gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
     gpio_write(pi, GPIO_FORWARD_R, PI_LOW); // Arrêt des moteurs
@@ -198,8 +198,8 @@ int main()
             usleep(100000); // Avance pendant 0.1 seconde
             DetectionMarker(); // Vérifie si un marqueur est détecté
             printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
-            gpio_write(pi, GPIO_FORWARD_L, PI_LOW); // Arrêt des moteurs
-            gpio_write(pi, GPIO_FORWARD_R, PI_LOW); 
+            MotorController_stop(&motorL); // Arrêt des moteurs    
+            MotorController_stop(&motorR); // Arrêt des moteurs
             printf("\033[1;33mArrêt des moteurs après avoir détecté un marqueur.\033[0m\n");
             if(DetectionMarker() < 5) // Si le marqueur est à moins de 7 cm
             {
