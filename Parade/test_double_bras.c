@@ -57,7 +57,7 @@ void bras_droit_haut()
     set_servo_pulsewidth(pi, servo_pinR, 1500);
 }
 
-void bras_gauche_movement(char pos1, char pos2, int time)
+/*void bras_gauche_movement(char pos1, char pos2, int time)
 {
     int timePerStep = time / 40;
     if (pos1 == "bas" && pos2 == "milieu")
@@ -68,7 +68,7 @@ void bras_gauche_movement(char pos1, char pos2, int time)
             usleep(800000);
         }
     }
-}
+}*/
 
 void bras_symmetriques_haut_bas()
 {
