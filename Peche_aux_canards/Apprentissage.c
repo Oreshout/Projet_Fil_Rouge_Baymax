@@ -142,7 +142,7 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
     MotorController_stop(motorR); // Arrêt du moteur droit
     MotorController_update(motorL);
     MotorController_update(motorR);
-    usleep(500000); // Avance pendant 0.5 seconde
+    usleep(200); // Avance pendant 0.5 seconde
     MotorController_stop(motorL); // Arrêt des moteurs    
     MotorController_stop(motorR); // Arrêt des moteurs
 
@@ -196,7 +196,7 @@ int main()
             MotorController_setTargetSpeed(&motorR, 10.0f);
             MotorController_update(&motorL);
             MotorController_update(&motorR);
-            usleep(100000); // Avance pendant 0.1 seconde
+            usleep(1000); // Avance pendant 0.1 seconde
             DetectionMarker(); // Vérifie si un marqueur est détecté
             printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
             MotorController_stop(&motorL); // Arrêt des moteurs    
@@ -207,21 +207,22 @@ int main()
                 printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
                 // Appel de la fonction pour attraper le marqueur
                 GestionAttrape(); // Gestion de l'attrape du marqueur
-                usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
                 MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
                 MotorController_setTargetSpeed(&motorR, 10.0f);
                 MotorController_update(&motorL);
                 MotorController_update(&motorR);
-                usleep(100000); // Avance pendant 0.1 seconde
+                usleep(10000); // Avance pendant 0.1 seconde
                 MotorController_stop(&motorL); // Arrêt des moteurs    
                 MotorController_stop(&motorR); // Arrêt des moteurs
-                usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
                 GestionLache(); // Gestion du lâcher du marqueur
-                MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
-                MotorController_setTargetSpeed(&motorR, 10.0f);
+                gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
+                gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
+                printf("Le robot va reculer après avoir attrapé le marqueur.\n");
                 MotorController_update(&motorL);
                 MotorController_update(&motorR);
-                usleep(500000); // Avance pendant 0.5 seconde
+                usleep(5000); // Avance pendant 0.5 seconde
                 MotorController_stop(&motorL); // Arrêt des moteurs    
                 MotorController_stop(&motorR); // Arrêt des moteurs
 
