@@ -116,13 +116,13 @@ int main(){
     sleep(1);
     printf("startig test\n");
 
-    for (int j = 0; j < 3; j++)
+    /*for (int j = 0; j < 3; j++)
     {
         for (int i = 0; i < 22; i++)
         {
             playNote(melody[i], durations[i]*4);
         }
-    }
+    }*/
 
     sleep(1);
 
@@ -130,7 +130,14 @@ int main(){
     {
         for (int i = 0; i < 37; i++)
         {
-            playNote(melody[i], durations[i]*4);
+            playNote(melodyP2[i], durationsP2[i]*4);
+        }
+    }
+    for (int j = 0; j < 4; j++)
+    {
+        for (int i = 0; i < 37; i++)
+        {
+            playNote(melodyP2Bis[i], durationsP2[i]*4);
         }
     }
 
