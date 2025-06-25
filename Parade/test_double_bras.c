@@ -57,18 +57,125 @@ void bras_droit_haut()
     set_servo_pulsewidth(pi, servo_pinR, 1500);
 }
 
-/*void bras_gauche_movement(char pos1, char pos2, int time)
-{
+void bras_gauche_movement(char *pos1, char *pos2, int time) // pos1 = depart
+{                                                           // pos2 = fin
     int timePerStep = time / 40;
+    int angle;
     if (pos1 == "bas" && pos2 == "milieu")
     {
         for (int i = 0; i < 40; i++)
         {
-            set_servo_pulsewidth(pi, servo_pinL, 2000);
-            usleep(800000);
+            angle = 2500 - 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinL, angle);
+            usleep(timePerStep);
         }
     }
-}*/
+    if (pos1 == "bas" && pos2 == "haut")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 2500 - 25 * i;
+            set_servo_pulsewidth(pi, servo_pinL, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "milieu" && pos2 == "bas")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 2000 + 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinL, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "milieu" && pos2 == "haut")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 2000 - 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinL, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "haut" && pos2 == "bas")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 1500 + 25 * i;
+            set_servo_pulsewidth(pi, servo_pinL, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "haut" && pos2 == "milieu")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 1500 + 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinL, angle);
+            usleep(timePerStep);
+        }
+    }
+}
+
+void bras_droit_movement(char *pos1, char *pos2, int time) // pos1 = depart
+{                                                          // pos2 = fin
+    int timePerStep = time / 40;
+    int angle;
+    if (pos1 == "bas" && pos2 == "milieu")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 500 + 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinR, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "bas" && pos2 == "haut")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 500 + 25 * i;
+            set_servo_pulsewidth(pi, servo_pinR, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "milieu" && pos2 == "bas")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 1000 - 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinR, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "milieu" && pos2 == "haut")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 1000 + 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinR, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "haut" && pos2 == "bas")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 1500 - 25 * i;
+            set_servo_pulsewidth(pi, servo_pinR, angle);
+            usleep(timePerStep);
+        }
+    }
+    if (pos1 == "haut" && pos2 == "milieu")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            angle = 1500 - 12.5 * i;
+            set_servo_pulsewidth(pi, servo_pinR, angle);
+            usleep(timePerStep);
+        }
+    }
+}
 
 void bras_symmetriques_haut_bas()
 {
@@ -135,14 +242,20 @@ int main()
     printf("startig test\n");
     // set_servo_to_custom(Left_Angle, Right_Angle);
 
-    bras_symmetriques_haut_bas();
+    /*bras_symmetriques_haut_bas();
     bras_symmetriques_haut_bas();
     bras_ensemble_gauche_droite();
     bras_symmetriques_haut_bas();
     bras_symmetriques_haut_bas();
     bras_ensemble_gauche_droite();
     bras_gauche_bas();
+    bras_droit_bas();*/
+
+    bras_gauche_bas();
     bras_droit_bas();
+    sleep(1);
+    bras_gauche_movement("bas", "milieu", 500000);
+    bras_droit_movement("bas", "haut", 100000);
 
     return 0;
 }
