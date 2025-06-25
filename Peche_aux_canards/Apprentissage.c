@@ -154,6 +154,9 @@ void MotorController_update(MotorController *self)
 
 void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *motorR)
 {
+    sleep(1); // Pause de 1 seconde pour éviter une boucle trop rapide
+    MotorController_setBackward(motorL, false); // ← AJOUTÉ
+    MotorController_setBackward(motorR, false);
     MotorController_setTargetSpeed(motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
     MotorController_setTargetSpeed(motorR, 10.0f);
     MotorController_update(motorL);
@@ -167,10 +170,10 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
     MotorController_setTargetSpeed(motorR, 30.0f);
     MotorController_update(motorL);
     MotorController_update(motorR);
-    usleep(5000); // 0.5s de rotation
+    usleep(100000); // 0.5s de rotation
     MotorController_stop(motorL);
     MotorController_stop(motorR);
-    usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+    sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
 
     printf("Aucun marqueur détecté, le robot avance.\n");
 }
@@ -232,6 +235,8 @@ int main()
             {
                 printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
                 // Appel de la fonction pour attraper le marqueur
+                  MotorController_setBackward(&motorL, false); // Inverse le sens du moteur gauche
+                MotorController_setBackward(&motorR, false);
                 GestionAttrape(); // Gestion de l'attrape du marqueur
                 usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
                 MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
@@ -245,6 +250,8 @@ int main()
                 GestionLache(); // Gestion du lâcher du marqueur
                 MotorController_setBackward(&motorL, true); // Inverse le sens du moteur gauche
                 MotorController_setBackward(&motorR, true); // Inverse le sens du moteur droit
+                MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+                MotorController_setTargetSpeed(&motorR, 10.0f);
                 MotorController_update(&motorL);
                 MotorController_update(&motorR);
                 printf("Le robot va reculer après avoir attrapé le marqueur.\n");
