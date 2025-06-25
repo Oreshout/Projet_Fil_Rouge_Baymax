@@ -57,6 +57,48 @@ void bras_droit_haut()
     set_servo_pulsewidth(pi, servo_pinR, 1500);
 }
 
+void bras_gauche_movement(char pos1, char pos2, int time)
+{
+    int timePerStep = time / 40;
+    if (pos1 == "bas" && pos2 == "milieu")
+    {
+        for (int i = 0; i < 40; i++)
+        {
+            set_servo_pulsewidth(pi, servo_pinL, 2000);
+            usleep(800000);
+        }
+    }
+}
+
+void bras_symmetriques_haut_bas()
+{
+    bras_gauche_bas();
+    bras_droit_bas();
+    usleep(800000);
+    bras_gauche_milieu();
+    bras_droit_milieu();
+    usleep(800000);
+    bras_gauche_haut();
+    bras_droit_haut();
+    usleep(800000);
+}
+
+void bras_ensemble_gauche_droite()
+{
+    bras_gauche_bas();
+    bras_droit_haut();
+    usleep(800000);
+    bras_gauche_milieu();
+    bras_droit_milieu();
+    usleep(800000);
+    bras_gauche_haut();
+    bras_droit_bas();
+    usleep(800000);
+    bras_droit_milieu();
+    bras_gauche_milieu();
+    usleep(800000);
+}
+
 int main()
 {
     pi = pigpio_start(NULL, NULL);
@@ -93,33 +135,12 @@ int main()
     printf("startig test\n");
     // set_servo_to_custom(Left_Angle, Right_Angle);
 
-    for (int i = 0; i < 2; i++)
-    {
-        bras_gauche_bas();
-        bras_droit_bas();
-        usleep(800000);
-        bras_gauche_milieu();
-        bras_droit_milieu();
-        usleep(800000);
-        bras_gauche_haut();
-        bras_droit_haut();
-        usleep(800000);
-    }
-    for (int i = 0; i < 2; i++)
-    {
-        bras_gauche_bas();
-        bras_droit_haut();
-        usleep(800000);
-        bras_gauche_milieu();
-        bras_droit_milieu();
-        usleep(800000);
-        bras_gauche_haut();
-        bras_droit_bas();
-        usleep(800000);
-        bras_droit_milieu();
-        bras_gauche_milieu();
-        usleep(800000);
-    }
+    bras_symmetriques_haut_bas();
+    bras_symmetriques_haut_bas();
+    bras_ensemble_gauche_droite();
+    bras_symmetriques_haut_bas();
+    bras_symmetriques_haut_bas();
+    bras_ensemble_gauche_droite();
     bras_gauche_bas();
     bras_droit_bas();
 
