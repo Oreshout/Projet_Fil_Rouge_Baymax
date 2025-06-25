@@ -256,6 +256,15 @@ int main()
                 MotorController_stop(&motorL); // Arrêt des moteurs    
                 MotorController_stop(&motorR); // Arrêt des moteurs
                 usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+                // Lucas modif
+                MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+                MotorController_setTargetSpeed(&motorR, 10.0f);
+                MotorController_update(&motorL);
+                MotorController_update(&motorR);
+                usleep(10000); // Avance pendant 0.1 seconde
+                MotorController_stop(&motorL); // Arrêt des moteurs    
+                MotorController_stop(&motorR); // Arrêt des moteurs
+                //Fin Lucas modif
                 GestionLache(); // Gestion du lâcher du marqueur
                 MotorController_setBackward(&motorL, true); // Inverse le sens du moteur gauche
                 MotorController_setBackward(&motorR, true); // Inverse le sens du moteur droit
