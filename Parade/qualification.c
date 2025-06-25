@@ -1,5 +1,8 @@
 #include "settings_parade.h"
 
+#define NOTE_C4  262
+#define NOTE_D4  294
+
 int pi;
 
 void set_servo_to_min()
@@ -21,6 +24,85 @@ void gauche_droite()
     set_servo_to_max();
 }
 
+void playNote(int freq, int duration_ms) {
+    if (freq == REST) {
+        gpio_write(pi, Buzz_1, PI_LOW);
+        usleep(duration_ms * 1000);
+    } else {
+        for (int i = 0; i < freq * duration_ms / 1000; i++) {
+            gpio_write(pi, Buzz_1, PI_HIGH);
+            usleep(500000 / freq);
+            gpio_write(pi, Buzz_1, PI_LOW);
+            usleep(500000 / freq);
+        }
+    }
+}
+
+void gauche_droite()
+{
+    set_servo_to_min();
+    usleep(500000);
+    set_servo_to_max();
+}
+
+void bras_gauche_bas()
+{
+    set_servo_pulsewidth(pi, servo_pinL, 2500);
+}
+
+void bras_gauche_milieu()
+{
+    set_servo_pulsewidth(pi, servo_pinL, 2000);
+}
+
+void bras_gauche_haut()
+{
+    set_servo_pulsewidth(pi, servo_pinL, 1500);
+}
+
+void bras_droit_bas()
+{
+    set_servo_pulsewidth(pi, servo_pinR, 500);
+}
+
+void bras_droit_milieu()
+{
+    set_servo_pulsewidth(pi, servo_pinR, 1000);
+}
+
+void bras_droit_haut()
+{
+    set_servo_pulsewidth(pi, servo_pinR, 1500);
+}
+
+void G_sequence(int t){
+    gpio_write(pi, Girlande_1, PI_HIGH);
+    usleep(t);
+    gpio_write(pi, Girlande_1, PI_LOW);
+    gpio_write(pi, Girlande_2, PI_HIGH);
+    usleep(t);
+    gpio_write(pi, Girlande_2, PI_LOW);
+    gpio_write(pi, Girlande_3, PI_HIGH);
+    usleep(t);
+    gpio_write(pi, Girlande_3, PI_LOW);
+    gpio_write(pi, Girlande_4, PI_HIGH);
+    usleep(t);
+    gpio_write(pi, Girlande_4, PI_LOW);
+}
+void G_Vers_int(int t){
+    gpio_write(pi, Girlande_1, PI_HIGH);
+    gpio_write(pi, Girlande_4, PI_HIGH);
+    usleep(t);
+    gpio_write(pi, Girlande_1, PI_LOW);
+    gpio_write(pi, Girlande_4, PI_LOW);
+    gpio_write(pi, Girlande_2, PI_HIGH);
+    gpio_write(pi, Girlande_3, PI_HIGH);
+    usleep(t);
+    gpio_write(pi, Girlande_2, PI_LOW);
+    gpio_write(pi, Girlande_3, PI_LOW);
+}
+
+
 void drift()
 {
     gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
@@ -38,31 +120,6 @@ void drift()
 
     gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
     gpio_write(pi, GPIO_BACKWARD_R, PI_LOW);
-}
-
-void triple_drift()
-{
-    for (int i = 0; i < 3; i++)
-    {
-        gpio_write(pi, GPIO_FORWARD_L, PI_HIGH);
-        gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
-
-        usleep(100000);
-
-        gpio_write(pi, GPIO_FORWARD_L, PI_LOW);
-        gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
-    }
-    usleep(300000);
-    for (int i = 0; i < 3; i++)
-    {
-        gpio_write(pi, GPIO_BACKWARD_L, PI_HIGH);
-        gpio_write(pi, GPIO_BACKWARD_R, PI_HIGH);
-
-        usleep(100000);
-
-        gpio_write(pi, GPIO_BACKWARD_L, PI_LOW);
-        gpio_write(pi, GPIO_BACKWARD_R, PI_LOW);
-    }
 }
 
 int main()
@@ -91,15 +148,11 @@ int main()
 
     // programme principal
     sleep(1);
-    printf("starting\n");
+    printf("démarage\n");
 
-    for (int i = 0; i < 5; i++)
-    {
-        gauche_droite();
-        usleep(300000);
-    }
+    G_Vers_int(400000);
 
-    sleep(3);
+    sleep(1);
     printf("drifting\n");
 
     drift();
@@ -109,9 +162,27 @@ int main()
     drift();
     usleep(500000);
 
-    // sleep(3);
-    // printf("le grand final\n");
-    // triple_drift();
+    sleep(1);
+    printf("buzzer\n");
+    playNote(NOTE_C4, 400000);
+    usleep(800000);
+    playNote(NOTE_D4, 400000);
+
+    sleep(1);
+    printf("final\n");
+    bras_gauche_haut();
+    bras_droit_haut();
+    usleep(500000);
+    bras_gauche_milieu();
+    bras_droit_milieu();
+    usleep(500000);
+    bras_gauche_haut();
+    bras_droit_haut();
+    usleep(500000);
+    bras_gauche_haut();
+    bras_droit_bas();
+    usleep(500000);
+    bras_gauche_bas();
 
     return 0;
 }
