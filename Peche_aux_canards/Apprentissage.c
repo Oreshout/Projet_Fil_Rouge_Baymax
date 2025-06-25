@@ -58,7 +58,7 @@ void GestionAttrape()
     printf("Attrape du marqueur en cours...\n");
   
     set_mode(pi, servo_pin, PI_OUTPUT);
-    set_servo_pulsewidth(pi, servo_pin, 1750); // Position initiale 
+    set_servo_pulsewidth(pi, servo_pin, 2000); // Position initiale 
     usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
 }
 
@@ -68,7 +68,7 @@ void GestionLache()
     printf("Attrape du marqueur en cours...\n");
   
     set_mode(pi, servo_pin, PI_OUTPUT);
-    set_servo_pulsewidth(pi, servo_pin, 1500); // Position initiale 
+    set_servo_pulsewidth(pi, servo_pin, 1750); // Position initiale 
     usleep(500000); // Pause de 0.5 seconde pour simuler l'attrape
 }
 
@@ -187,6 +187,12 @@ void MotorController_stop(MotorController *self)
     self->m_targetSpeed = 0.f;
 }
 
+void initServoMoteur()
+{
+    set_mode(pi, servo_pin, PI_OUTPUT); // Définit le mode du GPIO du servo moteur
+    set_servo_pulsewidth(pi, servo_pin, 1750); // Position initiale du servo moteur
+    usleep(500000); // Pause de 0.5 seconde pour laisser le temps au servo de se positionner
+}
 
 int main()
 {
@@ -210,6 +216,7 @@ int main()
     MotorController_stop(&motorL);
     MotorController_stop(&motorR);
 
+    initServoMoteur(); // Initialisation du servo moteur
 
     printf("\033[1;31mDémarrage du programme de détection de marqueurs...\033[0m\n");
 
@@ -235,7 +242,7 @@ int main()
             {
                 printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
                 // Appel de la fonction pour attraper le marqueur
-                  MotorController_setBackward(&motorL, false); // Inverse le sens du moteur gauche
+                MotorController_setBackward(&motorL, false); // Inverse le sens du moteur gauche
                 MotorController_setBackward(&motorR, false);
                 GestionAttrape(); // Gestion de l'attrape du marqueur
                 usleep(50000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
@@ -255,7 +262,7 @@ int main()
                 MotorController_update(&motorL);
                 MotorController_update(&motorR);
                 printf("Le robot va reculer après avoir attrapé le marqueur.\n");
-                usleep(5000); // Avance pendant 0.5 seconde
+                usleep(500000); // Avance pendant 0.5 seconde
                 MotorController_stop(&motorL); // Arrêt des moteurs    
                 MotorController_stop(&motorR); // Arrêt des moteurs
 
