@@ -93,17 +93,32 @@ int main()
     printf("startig test\n");
     // set_servo_to_custom(Left_Angle, Right_Angle);
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 2; i++)
     {
         bras_gauche_bas();
         bras_droit_bas();
-        sleep(1);
+        usleep(800000);
         bras_gauche_milieu();
         bras_droit_milieu();
-        sleep(1);
+        usleep(800000);
         bras_gauche_haut();
         bras_droit_haut();
-        sleep(1);
+        usleep(800000);
+    }
+    for (int i = 0; i < 2; i++)
+    {
+        bras_gauche_bas();
+        bras_droit_haut();
+        usleep(800000);
+        bras_gauche_milieu();
+        bras_droit_milieu();
+        usleep(800000);
+        bras_gauche_haut();
+        bras_droit_bas();
+        usleep(800000);
+        bras_droit_milieu();
+        bras_gauche_milieu();
+        usleep(800000);
     }
     bras_gauche_bas();
     bras_droit_bas();
