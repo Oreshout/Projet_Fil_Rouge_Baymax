@@ -178,7 +178,7 @@ int main()
                 // Appel de la fonction pour attraper le marqueur
                 GestionAttrape(); // Gestion de l'attrape du marqueur
                 usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
-                 MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+                MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
                 MotorController_setTargetSpeed(&motorR, 10.0f);
                 MotorController_update(&motorL);
                 MotorController_update(&motorR);
