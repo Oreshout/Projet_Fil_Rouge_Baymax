@@ -228,7 +228,7 @@ int main()
         {
             DetectionMarker(); // Vérifie si un marqueur est détecté
             printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
-            
+
             /*MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
             MotorController_setTargetSpeed(&motorR, 10.0f);
             MotorController_update(&motorL);
@@ -242,7 +242,8 @@ int main()
 
             if(DetectionMarker() < 10) // Si le marqueur est à moins de 7 cm
             {
-                printf("Le marqueur est à moins de 5 cm, le robot va attraper le marqueur.\n");
+                GestionAttrape(); // Gestion de l'attrape du marqueur
+                printf("Le marqueur est à moins de 10 cm, le robot va attraper le marqueur.\n");
                 // Appel de la fonction pour attraper le marqueur
                 MotorController_setBackward(&motorL, false); // Inverse le sens du moteur gauche
                 MotorController_setBackward(&motorR, false);
@@ -279,6 +280,17 @@ int main()
 
 
                 printf("Le marqueur a été attrapé.\n");
+            }
+            else if(DetectionMarker() > 10) // Si le marqueur est à plus de 15 cm
+            {
+                printf("Le marqueur est trop loin pour être attrapé.\n");
+                MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
+                MotorController_setTargetSpeed(&motorR, 10.0f);
+                MotorController_update(&motorL);
+                MotorController_update(&motorR);
+                usleep(500000); // Avance pendant 0.5 seconde
+                MotorController_stop(&motorL); // Arrêt des moteurs    
+                MotorController_stop(&motorR); // Arrêt des moteurs
             }
             else
             {
