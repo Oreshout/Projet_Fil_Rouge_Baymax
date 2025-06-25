@@ -8,6 +8,30 @@
 #define NOTE_A3  220  // La3
 #define NOTE_B3  247  // Si3
 
+#define NOTE_D4  294
+#define NOTE_E4  330
+#define NOTE_F4  349
+#define NOTE_G4  392
+#define NOTE_A4  440
+#define NOTE_AS4 466  // Bb4
+#define NOTE_B4  494
+#define NOTE_C5  523
+#define NOTE_D5  587
+#define NOTE_E5  659
+
+#define NOTE_F5  698
+#define NOTE_G5  784
+#define NOTE_A5  880
+#define NOTE_AS5 932  // Bb5
+#define NOTE_B5  988
+#define NOTE_C6  1047
+#define NOTE_D6  1175
+#define NOTE_E6  1319
+#define NOTE_F6  1397
+#define NOTE_G6  1568
+#define NOTE_A6  1760
+#define NOTE_B6  1976
+
 int melody[] = {
     NOTE_C4, REST, NOTE_C4, REST, NOTE_D4, REST, 
     NOTE_D4, REST, NOTE_D4, REST, NOTE_C4, REST, 
@@ -18,7 +42,7 @@ int durations[] = {
     25, 75, 25, 50, 25, 25, //noire - croche_pointé - croche
     25, 50, 25, 75, 25, 75, //croche_pointé - noire - noire
     25, 50, 25, 50, 25, 25, //croche_pointé - croche_pointé - croche
-    25, 25, 25, 25 //croche - croche
+    25, 25, 25, 25          //croche - croche
 };
 
 int durationsP2[] = {
@@ -31,10 +55,22 @@ int durationsP2[] = {
     25, 0                   //double_croche
 };
 int melodyP2[] = {
-    NOTE_C4, REST, NOTE_C4, REST, NOTE_D4, REST, 
-    NOTE_D4, REST, NOTE_D4, REST, NOTE_C4, REST, 
-    NOTE_D4, REST, NOTE_D4, REST, NOTE_D4, REST, 
-    NOTE_D4, REST, NOTE_D4, REST
+    NOTE_D6, REST, NOTE_B6, REST, NOTE_G5, REST, 
+    NOTE_G5, REST, NOTE_D6, REST, NOTE_D6, REST, 
+    NOTE_A6, REST, NOTE_F5, REST, NOTE_F5, REST, 
+    NOTE_D6, REST, NOTE_D6, REST, NOTE_A6, REST, 
+    NOTE_F5, REST, NOTE_F5, REST, NOTE_C5, REST, 
+    NOTE_C5, REST, NOTE_E5, REST, NOTE_E5, REST, 
+    NOTE_F5, REST
+};
+int melodyP2Bis[] = {
+    NOTE_D5, REST, NOTE_B5, REST, NOTE_G4, REST, 
+    NOTE_G4, REST, NOTE_D5, REST, NOTE_D5, REST, 
+    NOTE_A5, REST, NOTE_F4, REST, NOTE_F4, REST, 
+    NOTE_D5, REST, NOTE_D5, REST, NOTE_A5, REST, 
+    NOTE_F4, REST, NOTE_F4, REST, NOTE_C4, REST, 
+    NOTE_C4, REST, NOTE_E4, REST, NOTE_E4, REST, 
+    NOTE_F4, REST
 };
 
 int pi;
@@ -80,9 +116,19 @@ int main(){
     sleep(1);
     printf("startig test\n");
 
-    for (int j = 0; j < 5; j++)
+    for (int j = 0; j < 3; j++)
     {
         for (int i = 0; i < 22; i++)
+        {
+            playNote(melody[i], durations[i]*4);
+        }
+    }
+
+    sleep(1);
+
+    for (int j = 0; j < 4; j++)
+    {
+        for (int i = 0; i < 37; i++)
         {
             playNote(melody[i], durations[i]*4);
         }
