@@ -393,9 +393,6 @@ int main()
     G_Vers_int(400000);
 
     usleep(500000);
-
-    rotate_right();
-
     
     for (int i = 0; i < 3; i++)
     {
@@ -429,11 +426,13 @@ int main()
     bras_gauche_movement(MID, HAUT, 100000);
     usleep(500000);
 
+
+    bras_droit_movement(HAUT, BAS, 100000);
     for (int j = 0; j < 4; j++)
     {
         //bras_droit_haut();
         //bras_gauche_bas();
-        bras_gauche_movement(HAUT, BAS, 100000);
+        bras_gauche_et_droit_mouvement(HAUT, BAS, BAS, HAUT, 100000);
         usleep(250000);
         drift_back();
         usleep(750000);
@@ -445,6 +444,9 @@ int main()
         G_sequence(100000);
         usleep(750000);
     }
+
+    
+    rotate_right();
         
         
 
