@@ -133,6 +133,7 @@ int main(){
         for (int i = 0; i < 22; i++)
         {
             playNote(melody[i]/2, durations[i]*4.8);
+            
         }
     }
 
@@ -149,7 +150,7 @@ int main(){
             playNote(melodyP2[i]/2, durationsP2[i]*4.8);
         }
     }
-    for (int j = 0; j < 4; j++)
+    for (int j = 0; j < 3; j++)
     {
         for (int i = 0; i < 37; i++)
         {
