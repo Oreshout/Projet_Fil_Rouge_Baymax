@@ -166,7 +166,7 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
     struct marker* markerData = get_markers(30);
 
     temp = rand() % 2; // Génère un nombre aléatoire entre 0 et 1
-    sleep(1); // Pause de 1 seconde pour éviter une boucle trop rapide
+    usleep(500000); // Pause de 1 seconde pour éviter une boucle trop rapide
     MotorController_setBackward(motorL, false); // ← AJOUTÉ
     MotorController_setBackward(motorR, false);
     MotorController_setTargetSpeed(motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
@@ -202,15 +202,15 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
         usleep(100000); // 0.5s de rotation
         MotorController_stop(motorL);
         MotorController_stop(motorR);
-        sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+        usleep(500000); // Pause de 0.5 seconde pour éviter une boucle trop rapide
     }
 
     while(tour < 12)
     {
-        if(DetectionMarkerExist() && markerData->y > 0 || markerData->y < 4) // Si un marqueur est détecté
+        if(DetectionMarkerExist() == true &&  ) // Si un marqueur est détecté
         {
             printf("Un marqueur a été détecté, le robot avance.\n");
-            break;; // Sort de la fonction si un marqueur est détecté
+            break; // Sort de la fonction si un marqueur est détecté
         }
         MotorController_stop(motorL);
         MotorController_stop(motorR);
@@ -220,10 +220,10 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
         MotorController_setTargetSpeed(motorR, 30.0f);
         MotorController_update(motorL);
         MotorController_update(motorR);
-        usleep(50000); // 0.5s de rotation
+        usleep(500000); // 0.5s de rotation
         MotorController_stop(motorL);
         MotorController_stop(motorR);
-        sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+        usleep(500000); // 0.5s de rotation
         tour++;
     }
 
