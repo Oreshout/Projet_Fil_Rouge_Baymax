@@ -11,14 +11,11 @@ void initServoMoteur()
 
 void ActivationServoMoteurLancer()
 {
-    set_mode(pi, servo_pin_Lancer, PI_OUTPUT); 
-    set_servo_pulsewidth(pi, servo_pin_Recharge, 1000); // Position initiale
-    sleep(5); // Attendre que le servo se positionne
     set_mode(pi, servo_pin_Recharge, PI_OUTPUT); 
     set_servo_pulsewidth(pi, servo_pin_Lancer, 1500); // Position finale
     sleep(10); // Attendre que le servo se positionne
     set_servo_pulsewidth(pi, servo_pin_Lancer, 500); // Position finale
-    set_servo_pulsewidth(pi, servo_pin_Recharge, 500);
+
 }
 
 
