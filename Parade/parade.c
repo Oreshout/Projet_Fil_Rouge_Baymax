@@ -496,8 +496,9 @@ int main()
     for(int i=0; i<4; i++)
     {
         bras_droit_movement(MID,HAUT,100000);
-        //Peut-etre mettre un usleep
+        usleep(200000);
         bras_droit_movement(HAUT,MID,100000);
+        usleep(200000);
     }
 
     rotate_right();
