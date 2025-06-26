@@ -214,7 +214,7 @@ int main()
         int distance = markerData->z;
         printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", distance);
 
-        if(distance < 10)
+        if(distance <= 10)
         {
             printf("Le marqueur est à moins de 10 cm, le robot va attraper le marqueur.\n");
 
@@ -277,6 +277,31 @@ int main()
 
             printf("Le marqueur a été attrapé.\n");
         }
+        else if(distance <= 20){
+            printf("Le marqueur est à moins de 20 cm.\n");
+
+            MotorController_setBackward(&motorL, false); 
+            MotorController_setBackward(&motorR, false);
+            MotorController_setTargetSpeed(&motorL, 10.0f);
+            MotorController_setTargetSpeed(&motorR, 10.0f);
+            MotorController_update(&motorL);
+            MotorController_update(&motorR);
+
+            usleep(800); // avance un petit peu
+            markerData = get_markers(30); // 🔁 Est-ce qu’on est devenu assez proche ?
+            if(markerData != NULL && markerData->id != -1)
+                distance = markerData->z;
+
+            usleep(800); // continue encore un peu
+            markerData = get_markers(30); // 🔁 Encore une vérif
+            if(markerData != NULL && markerData->id != -1)
+                distance = markerData->z;
+
+            MotorController_stop(&motorL);
+            MotorController_stop(&motorR); 
+        }
+
+
         else // Marqueur détecté mais trop loin
         {
             printf("Le marqueur est trop loin pour être attrapé.\n");
