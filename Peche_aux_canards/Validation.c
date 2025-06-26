@@ -161,6 +161,9 @@ void MotorController_update(MotorController *self)
 
 void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *motorR)
 {
+    int temp = 0;
+    int tour = 0;
+    temp = rand() % 2; // Génère un nombre aléatoire entre 0 et 1
     sleep(1); // Pause de 1 seconde pour éviter une boucle trop rapide
     MotorController_setBackward(motorL, false); // ← AJOUTÉ
     MotorController_setBackward(motorR, false);
@@ -169,18 +172,61 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
     MotorController_update(motorL);
     MotorController_update(motorR);
     usleep(500000); // Avance pendant 0.5 seconde
-    MotorController_stop(motorL);
-    MotorController_stop(motorR);
-    MotorController_setBackward(motorL, true);
-    MotorController_setBackward(motorR, false); // Avance
-    MotorController_setTargetSpeed(motorL, 30.0f);
-    MotorController_setTargetSpeed(motorR, 30.0f);
-    MotorController_update(motorL);
-    MotorController_update(motorR);
-    usleep(100000); // 0.5s de rotation
-    MotorController_stop(motorL);
-    MotorController_stop(motorR);
-    sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+    if(temp == 1)
+    {
+        MotorController_stop(motorL);
+        MotorController_stop(motorR);
+        MotorController_setBackward(motorL, true);
+        MotorController_setBackward(motorR, false); // Avance
+        MotorController_setTargetSpeed(motorL, 30.0f);
+        MotorController_setTargetSpeed(motorR, 30.0f);
+        MotorController_update(motorL);
+        MotorController_update(motorR);
+        usleep(100000); // 0.5s de rotation
+        MotorController_stop(motorL);
+        MotorController_stop(motorR);
+        sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+    }
+    else if(temp == 0)
+    {
+        MotorController_stop(motorL);
+        MotorController_stop(motorR);
+        MotorController_setBackward(motorL, false);
+        MotorController_setBackward(motorR, true); // Avance
+        MotorController_setTargetSpeed(motorL, 30.0f);
+        MotorController_setTargetSpeed(motorR, 30.0f);
+        MotorController_update(motorL);
+        MotorController_update(motorR);
+        usleep(100000); // 0.5s de rotation
+        MotorController_stop(motorL);
+        MotorController_stop(motorR);
+        sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+    }
+
+    while(tour < 12)
+    {
+        if(DetectionMarkerExist() && markerData->y == 0) // Si un marqueur est détecté
+        {
+            printf("Un marqueur a été détecté, le robot avance.\n");
+            break;; // Sort de la fonction si un marqueur est détecté
+        }
+        MotorController_stop(motorL);
+        MotorController_stop(motorR);
+        MotorController_setBackward(motorL, false);
+        MotorController_setBackward(motorR, true); // Avance
+        MotorController_setTargetSpeed(motorL, 30.0f);
+        MotorController_setTargetSpeed(motorR, 30.0f);
+        MotorController_update(motorL);
+        MotorController_update(motorR);
+        usleep(50000); // 0.5s de rotation
+        MotorController_stop(motorL);
+        MotorController_stop(motorR);
+        sleep(2); // Pause de 0.5 seconde pour éviter une boucle trop rapide
+        tour++;
+    }
+
+    MotorController_setBackward(motorL, false); // ← AJOUTÉ
+    MotorController_setBackward(motorR, false);
 
     printf("Aucun marqueur détecté, le robot avance.\n");
 }
@@ -339,7 +385,7 @@ int main()
                 PatternMouvementSiAucunMarqueur(&motorL, &motorR); // Avance si aucun marqueur n'est détecté
                 printf("Je viens de faire le pattern de mouvement car aucun marqueur n'est détecté.\n");
                 printf("Le robot avance car aucun marqueur n'est détecté.\n");
-                GestionLache(); // Gestion du lâcher du marqueur
+                initServoMoteur(); // Initialisation du servo moteur
                 usleep(500000); // Pause de 0.5 seconde pour éviter une boucle
             }
         }
