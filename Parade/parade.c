@@ -455,25 +455,39 @@ int main()
 
     bras_droit_movement(HAUT, MID, 100000);
     usleep(750000);
+    G_Vers_int(100000);
     drift_back();
     usleep(750000);
     bras_gauche_movement(HAUT, MID, 100000);
     usleep(750000);
+    G_Vers_int(100000);
     drift_front();
     usleep(750000);
 
     bras_droit_movement(MID, BAS, 100000);
     usleep(750000);
+    G_Vers_int(100000);
     drift_back();
     usleep(750000);
     bras_gauche_movement(MID, BAS, 100000);
     usleep(750000);
+    G_Vers_int(100000);
     drift_front();
     usleep(750000);
 
 
+    //CLAP CLAP 
+    for(int i =0, i<3, i++)
+    {
+        bras_droit_milieu();
+        bras_gauche_milieu();
+        usleep(100000);
 
-    
+        bras_droit_haut();
+        bras_gauche_haut();
+        usleep(200000)
+    }
+
     rotate_right();
         
         
