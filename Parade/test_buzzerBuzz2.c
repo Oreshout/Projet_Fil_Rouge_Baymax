@@ -70,7 +70,7 @@ int main(){
     {
         for (int i = 0; i < 22; i++)
         {
-            playNote(melody5[i], durations[i]*4);
+            playNote(melody5[i]/2, durations[i]*4.8);
         }
     }
 

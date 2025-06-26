@@ -47,12 +47,12 @@ int durations[] = {
 
 int durationsP2[] = {
     25, 25, 25, 25, 25, 25, //croche - croche - croche
-    25, 0, 25, 25, 25, 0,   //double_croche - croche - double_croche
+    15, 10, 25, 25, 15, 10,   //double_croche - croche - double_croche
     25, 25, 25, 25, 25, 25, //croche - croche - croche
-    25, 25, 25, 0, 25, 25,  //croche - double_croche - croche
-    25, 25, 25, 0, 25, 25,  //croche - double_croche - croche
-    25, 25, 25, 25, 25, 0,  //croche - croche - double_croche
-    25, 0                   //double_croche
+    25, 25, 15, 10, 25, 25,  //croche - double_croche - croche
+    25, 25, 15, 10, 25, 25,  //croche - double_croche - croche
+    25, 25, 25, 25, 15, 10,  //croche - croche - double_croche
+    15, 10                   //double_croche
 };
 int melodyP2[] = {
     NOTE_D6, REST, NOTE_B6, REST, NOTE_G5, REST, 
@@ -71,6 +71,18 @@ int melodyP2Bis[] = {
     NOTE_F4, REST, NOTE_F4, REST, NOTE_C4, REST, 
     NOTE_C4, REST, NOTE_E4, REST, NOTE_E4, REST, 
     NOTE_F4, REST
+};
+
+int melodytrans[] = {
+    NOTE_D4, REST, NOTE_D4, REST, NOTE_D4, REST, 
+    NOTE_D4, REST, NOTE_F4, REST, NOTE_F4, REST, 
+    NOTE_F4, REST, NOTE_F4
+};
+
+int durationsTrans[] = {
+    25, 75, 25, 75, 25, 75, //noire - noire - noire
+    25, 75, 25, 75, 25, 75, //noire - noire - noire
+    25, 75, 25, 75  //noire - noire
 };
 
 int pi;
@@ -116,28 +128,32 @@ int main(){
     sleep(1);
     printf("startig test\n");
 
-    /*for (int j = 0; j < 3; j++)
+    for (int j = 0; j < 3; j++)
     {
         for (int i = 0; i < 22; i++)
         {
-            playNote(melody[i], durations[i]*4);
+            playNote(melody[i]/2, durations[i]*4.8);
         }
-    }*/
+    }
 
-    sleep(1);
+    for (int i = 0; i < 16; i++)
+    {
+        playNote(melodytrans[i]/2, durationsTrans[i]*4.8);
+    }
+    
 
     for (int j = 0; j < 4; j++)
     {
         for (int i = 0; i < 37; i++)
         {
-            playNote(melodyP2[i], durationsP2[i]*4);
+            playNote(melodyP2[i]/2, durationsP2[i]*4.8);
         }
     }
     for (int j = 0; j < 4; j++)
     {
         for (int i = 0; i < 37; i++)
         {
-            playNote(melodyP2Bis[i], durationsP2[i]*4);
+            playNote(melodyP2Bis[i]/2, durationsP2[i]*4.8);
         }
     }
 
