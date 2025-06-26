@@ -394,6 +394,7 @@ int main()
 
     usleep(500000);
     
+    //intro clap
     for (int i = 0; i < 3; i++)
     {
         MotorController_setBackward(&motorL, true);
@@ -408,7 +409,7 @@ int main()
         bras_gauche_et_droit_mouvement(HAUT, BAS, HAUT, BAS, 100000);
         //bras_droit_bas();
         //bras_gauche_bas();
-        usleep(500000);
+        usleep(250000);
 
         G_all(200000);
         usleep(500000);
@@ -417,6 +418,8 @@ int main()
         G_all(200000);
         usleep(500000);
     }
+
+    //Drop
     bras_droit_movement(BAS, MID, 100000);
     usleep(750000);
     bras_droit_movement(MID, HAUT, 100000);
@@ -426,7 +429,7 @@ int main()
     bras_gauche_movement(MID, HAUT, 100000);
     usleep(500000);
 
-
+    //smoth move
     bras_droit_movement(HAUT, BAS, 100000);
     for (int j = 0; j < 4; j++)
     {
@@ -435,6 +438,7 @@ int main()
         bras_gauche_et_droit_mouvement(HAUT, BAS, BAS, HAUT, 100000);
         usleep(250000);
         drift_back();
+        G_sequence(100000);
         usleep(750000);
         //bras_gauche_haut();
         //bras_droit_bas();
@@ -445,7 +449,29 @@ int main()
         usleep(750000);
     }
 
-    
+    //bras simple
+    bras_droit_movement(BAS, HAUT, 200000);
+    usleep(750000);
+
+    bras_droit_movement(HAUT, MID, 100000);
+    usleep(750000);
+    drift_back();
+    usleep(750000);
+    bras_gauche_movement(HAUT, MID, 100000);
+    usleep(750000);
+    drift_front();
+    usleep(750000);
+
+    bras_droit_movement(MID, BAS, 100000);
+    usleep(750000);
+    drift_back();
+    usleep(750000);
+    bras_gauche_movement(MID, BAS, 100000);
+    usleep(750000);
+    drift_front();
+    usleep(750000);
+
+
 
     
     rotate_right();
