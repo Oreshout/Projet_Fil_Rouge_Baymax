@@ -287,12 +287,12 @@ int main()
             MotorController_update(&motorL);
             MotorController_update(&motorR);
 
-            usleep(10000); // avance un petit peu
+            usleep(800); // avance un petit peu
             markerData = get_markers(30); // 🔁 Est-ce qu’on est devenu assez proche ?
             if(markerData != NULL && markerData->id != -1)
                 distance = markerData->z;
 
-            usleep(10000); // continue encore un peu
+            usleep(800); // continue encore un peu
             markerData = get_markers(30); // 🔁 Encore une vérif
             if(markerData != NULL && markerData->id != -1)
                 distance = markerData->z;
