@@ -477,7 +477,7 @@ int main()
 
 
     //CLAP CLAP 
-    for(int i =0, i<3, i++)
+    for(int i =0; i<3; i++)
     {
         bras_droit_milieu();
         bras_gauche_milieu();
@@ -486,6 +486,18 @@ int main()
         bras_droit_haut();
         bras_gauche_haut();
         usleep(200000)
+    }
+
+    //Bye bye
+
+    bras_droit_movement(HAUT,MID,100000);
+    bras_gauche_movement(HAUT,BAS,100000);
+
+    for(int i=0; i<4; i++)
+    {
+        bras_droit_movement(MID,HAUT,100000);
+        //Peut-etre mettre un usleep
+        bras_droit_movement(HAUT,MID,100000);
     }
 
     rotate_right();
