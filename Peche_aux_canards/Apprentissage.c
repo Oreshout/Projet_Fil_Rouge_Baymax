@@ -270,7 +270,7 @@ int main()
             if(markerData != NULL && markerData->id != -1)
                 distance = markerData->z;
             */
-            usleep(250000); // fin de l’avance
+            usleep(250000); // fin de l’avance 
             MotorController_stop(&motorL);    
             MotorController_stop(&motorR);
 
