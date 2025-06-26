@@ -2,6 +2,13 @@
 
 int pi;
 
+void initServoMoteur()
+{
+    set_mode(pi, servo_pin, PI_OUTPUT); // Met le GPIO du servo en mode sortie
+    set_servo_pulsewidth(pi, servo_pin, 1675); // Position initiale du servo
+    usleep(500000); // Pause de 0.5 seconde pour laisser le temps au servo de se positionner
+}
+
 void ActivationServoMoteurLancer()
 {
     set_mode(pi, servo_pin_Lancer, PI_OUTPUT); 
@@ -18,6 +25,8 @@ void ActivationServoMoteurLancer()
 int main()
 {
     pi = pigpio_start(NULL, NULL); // Démarre la bibliothèque pigpio pour le contrôle des GPIO
+
+    initServoMoteur(); // Initialisation du servo moteur
 
     scanf("Démarrage du test de lancement et de recharge du servo moteur...\n");
 
