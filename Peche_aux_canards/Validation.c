@@ -163,6 +163,8 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
 {
     int temp = 0;
     int tour = 0;
+    struct marker* markerData = get_markers(30);
+
     temp = rand() % 2; // Génère un nombre aléatoire entre 0 et 1
     sleep(1); // Pause de 1 seconde pour éviter une boucle trop rapide
     MotorController_setBackward(motorL, false); // ← AJOUTÉ
