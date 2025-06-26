@@ -325,6 +325,6 @@ int main()
     sleep(1);
     /*bras_gauche_movement("bas", "milieu", 500000);
     bras_droit_movement("bas", "haut", 500000);*/
-    bras_gauche_et_droit_mouvement("bas", "haut", "haut", "bas", 500000);
+    //bras_gauche_et_droit_mouvement("bas", "haut", "haut", "bas", 500000);
     return 0;
 }
