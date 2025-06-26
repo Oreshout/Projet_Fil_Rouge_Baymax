@@ -485,7 +485,7 @@ int main()
 
         bras_droit_haut();
         bras_gauche_haut();
-        usleep(200000)
+        usleep(200000);
     }
 
     //Bye bye
