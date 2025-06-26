@@ -177,6 +177,75 @@ void bras_droit_movement(char *pos1, char *pos2, int time) // pos1 = depart
     }
 }
 
+void bras_gauche_et_droit_mouvement(char *posG1, char *posG2, char *posR1, char *posR2, int time)
+{
+    int timePerStep = time / 40;
+    int i = 0;
+    int angleG;
+    int angleR;
+
+    while (i < 41)
+    {
+        // Mouvement bras gauche
+        if (posG1 == "bas" && posG2 == "milieu")
+        {
+            angleG = 2500 - 12.5 * i;
+        }
+        if (posG1 == "bas" && posG2 == "haut")
+        {
+            angleG = 2500 - 25 * i;
+        }
+        if (posG1 == "milieu" && posG2 == "bas")
+        {
+            angleG = 2000 + 12.5 * i;
+        }
+        if (posG1 == "milieu" && posG2 == "haut")
+        {
+            angleG = 2000 - 12.5 * i;
+        }
+        if (posG1 == "haut" && posG2 == "bas")
+        {
+            angleG = 1500 + 25 * i;
+        }
+        if (posG1 == "haut" && posG2 == "milieu")
+        {
+            angleG = 1500 + 12.5 * i;
+        }
+
+        // Mouvement bras droit
+        if (posR1 == "bas" && posR2 == "milieu")
+        {
+            angleR = 500 + 12.5 * i;
+        }
+        if (posR1 == "bas" && posR2 == "haut")
+        {
+            angleR = 500 + 25 * i;
+        }
+        if (posR1 == "milieu" && posR2 == "bas")
+        {
+            angleR = 1000 - 12.5 * i;
+        }
+        if (posR1 == "milieu" && posR2 == "haut")
+        {
+            angleR = 1000 + 12.5 * i;
+        }
+        if (posR1 == "haut" && posR2 == "bas")
+        {
+            angleR = 1500 - 25 * i;
+        }
+        if (posR1 == "haut" && posR2 == "milieu")
+        {
+            angleR = 1500 - 12.5 * i;
+        }
+
+        set_servo_pulsewidth(pi, servo_pinR, angleR);
+        set_servo_pulsewidth(pi, servo_pinL, angleG);
+        usleep(timePerStep);
+
+        i++;
+    }
+}
+
 void bras_symmetriques_haut_bas()
 {
     bras_gauche_bas();
@@ -254,8 +323,8 @@ int main()
     bras_gauche_bas();
     bras_droit_bas();
     sleep(1);
-    bras_gauche_movement("bas", "milieu", 500000);
-    bras_droit_movement("bas", "haut", 100000);
-
+    /*bras_gauche_movement("bas", "milieu", 500000);
+    bras_droit_movement("bas", "haut", 500000);*/
+    bras_gauche_et_droit_mouvement_optimised("bas", "milieu", "bas", "milieu", 500000);
     return 0;
 }
