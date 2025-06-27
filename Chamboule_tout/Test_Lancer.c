@@ -32,9 +32,9 @@ int main()
 
     usleep(1000000);
 
-    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
-    usleep(100000);
-    gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
+    //gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+    //usleep(100000);
+    //gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
 
     pigpio_stop(pi); // Arrête la bibliothèque pigpio
     return 0; // Retourne 0 pour indiquer que le programme s'est terminé avec succès
