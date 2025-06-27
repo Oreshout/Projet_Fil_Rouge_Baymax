@@ -287,17 +287,6 @@ int main()
                 
                 printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", distance);
 
-                /*MotorController_setTargetSpeed(&motorL, 10.0f); // 10.0f = vitesse en rad/s ou unités utilisées dans ton contrôleur
-                MotorController_setTargetSpeed(&motorR, 10.0f);
-                MotorController_update(&motorL);
-                MotorController_update(&motorR);
-                usleep(1000); // Avance pendant 0.1 seconde
-                DetectionMarker(); // Vérifie si un marqueur est détecté
-                printf("\033[1;34mUn marqueur a été détecté à %dcm.\033[0m\n", DetectionMarker());
-                MotorController_stop(&motorL); // Arrêt des moteurs    
-                MotorController_stop(&motorR); // Arrêt des moteurs
-                printf("\033[1;33mArrêt des moteurs après avoir détecté un marqueur.\033[0m\n");*/
-
                 if(distance < 10) // Si le marqueur est à moins de 7 cm
                 {
                     MotorController_setBackward(&motorL, false); 
@@ -305,16 +294,7 @@ int main()
                     GestionAttrape(); 
 
                     usleep(10000); // pause
-                    /*markerData = get_markers(30); // 🔁 Rafraîchissement
                     
-                    if(markerData != NULL && markerData->id != -1)
-                        distance = markerData->z;
-
-                    usleep(100000); // pause
-                    markerData = get_markers(30); // 🔁 Encore un rafraîchissement
-                    if(markerData != NULL && markerData->id != -1)
-                        distance = markerData->z;
-                    */
                     // Avance un peu
                     MotorController_setTargetSpeed(&motorL, 10.0f);
                     MotorController_setTargetSpeed(&motorR, 10.0f);
@@ -322,23 +302,13 @@ int main()
                     MotorController_update(&motorR);
 
                     usleep(250000); // moitié de la phase d’avance
-                    /*
-                    markerData = get_markers(30); // 🔁 Surveillance en cours de route
-                    if(markerData != NULL && markerData->id != -1)
-                        distance = markerData->z;
-                    */
+                    
                     usleep(250000); // fin de l’avance
                     MotorController_stop(&motorL);    
                     MotorController_stop(&motorR);
 
                     usleep(100000);
-                    /*
-                    markerData = get_markers(30); // Encore une vérif avant de lâcher
-                    if(markerData != NULL && markerData->id != -1)
-                        distance = markerData->z;
-                    */
-
-
+                    
                     // Lâche
                     GestionLache();
 
@@ -353,11 +323,7 @@ int main()
                     printf("Le robot va reculer après avoir attrapé le marqueur.\n");
 
                     usleep(250000);
-                    /*
-                    markerData = get_markers(30); // 🔁 Pendant le recul
-                    if(markerData != NULL && markerData->id != -1)
-                        distance = markerData->z;
-                    */
+                    
                     usleep(250000);
                     MotorController_stop(&motorL);    
                     MotorController_stop(&motorR);
