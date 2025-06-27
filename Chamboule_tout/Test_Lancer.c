@@ -30,6 +30,12 @@ int main()
     ActivationServoMoteurLancer(); // Active le servo moteur pour recharger
     // Attendre que le servo se positionne
 
+    usleep(1000000);
+
+    gpio_write(pi, GPIO_FORWARD_R, PI_HIGH);
+    usleep(100000);
+    gpio_write(pi, GPIO_FORWARD_R, PI_LOW);
+
     pigpio_stop(pi); // Arrête la bibliothèque pigpio
     return 0; // Retourne 0 pour indiquer que le programme s'est terminé avec succès
 }

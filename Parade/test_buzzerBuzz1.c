@@ -32,6 +32,13 @@
 #define NOTE_A6  1760
 #define NOTE_B6  1976
 
+#define TAP_DROIT 1
+#define TAP_GAUCHE 2
+#define RELEVE_DROIT 3
+#define RELEVE_GAUCHE 4
+
+#define RIEN_FAIRE 5
+
 int melody[] = {
     NOTE_C4, REST, NOTE_C4, REST, NOTE_D4, REST, 
     NOTE_D4, REST, NOTE_D4, REST, NOTE_C4, REST, 
@@ -85,7 +92,83 @@ int durationsTrans[] = {
     25, 75, 25, 75  //noire - noire
 };
 
+//tape
+
+int melodyDROIT[] = {
+    TAP_DROIT, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, TAP_DROIT, RIEN_FAIRE, 
+    RELEVE_DROIT, RIEN_FAIRE, TAP_DROIT, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, TAP_DROIT, RIEN_FAIRE, 
+    RELEVE_DROIT, RIEN_FAIRE, TAP_DROIT, RIEN_FAIRE
+}; //fini par taper a droite.
+int melodyGAUCHE[] = {
+    RIEN_FAIRE, RIEN_FAIRE, TAP_GAUCHE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, 
+    TAP_GAUCHE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, TAP_GAUCHE, RIEN_FAIRE, 
+    RELEVE_GAUCHE, RIEN_FAIRE, TAP_GAUCHE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, 
+    TAP_GAUCHE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE
+};
+
+int melodyP2DROIT[] = {
+    TAP_DROIT, RIEN_FAIRE, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, RIEN_FAIRE, 
+    RIEN_FAIRE, RIEN_FAIRE
+}; 
+int melodyP2GAUCHE[] = {
+    TAP_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, 
+    TAP_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, RIEN_FAIRE, 
+    RIEN_FAIRE, RIEN_FAIRE
+}; //fini par en haut les deux
+
+int melodytransDROIT[] = {
+    TAP_DROIT, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, TAP_DROIT, RIEN_FAIRE, 
+    RELEVE_DROIT, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, RELEVE_DROIT, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RELEVE_DROIT
+};//fini tap droit
+
+int melodytransGAUCHE[] = {
+    TAP_GAUCHE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, TAP_GAUCHE, RIEN_FAIRE, 
+    RELEVE_GAUCHE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, RELEVE_GAUCHE, RIEN_FAIRE, 
+    TAP_DROIT, RIEN_FAIRE, RELEVE_GAUCHE
+};
+
 int pi;
+
+void bras_gauche_bas()
+{
+    set_servo_pulsewidth(pi, servo_pinL, 2500);
+}
+
+void bras_gauche_milieu()
+{
+    set_servo_pulsewidth(pi, servo_pinL, 2000);
+}
+
+void bras_gauche_haut()
+{
+    set_servo_pulsewidth(pi, servo_pinL, 1500);
+}
+
+void bras_droit_bas()
+{
+    set_servo_pulsewidth(pi, servo_pinR, 500);
+}
+
+void bras_droit_milieu()
+{
+    set_servo_pulsewidth(pi, servo_pinR, 1000);
+}
+
+void bras_droit_haut()
+{
+    set_servo_pulsewidth(pi, servo_pinR, 1500);
+}
 
 void playNote(int freq, int duration_ms) {
     if (freq == REST) {
@@ -98,6 +181,48 @@ void playNote(int freq, int duration_ms) {
             gpio_write(pi, Buzz_1, PI_LOW);
             usleep(500000 / freq);
         }
+    }
+}
+
+void play_drum_L(int DrumPos){
+    switch (DrumPos)
+    {
+    case TAP_GAUCHE:
+        bras_gauche_bas();
+        break;
+
+    case RELEVE_GAUCHE:
+        bras_gauche_haut();
+        break;
+
+    case RIEN_FAIRE:
+        return;
+        break;
+    
+    default:
+    printf("grosse ereur drum L\n");
+        break;
+    }
+}
+
+void play_drum_R(int DrumPos){
+    switch (DrumPos)
+    {
+    case TAP_DROIT:
+        bras_droit_bas();
+        break;
+
+    case RELEVE_DROIT:
+        bras_droit_haut();
+        break;
+
+    case RIEN_FAIRE:
+        return;
+        break;
+    
+    default:
+    printf("grosse ereur drum R\n");
+        break;
     }
 }
 
@@ -133,13 +258,16 @@ int main(){
         for (int i = 0; i < 22; i++)
         {
             playNote(melody[i]/2, durations[i]*4.8);
-            
+            play_drum_L(melodyGAUCHE[i]);
+            play_drum_R(melodyDROIT[i]);
         }
     }
 
     for (int i = 0; i < 16; i++)
     {
         playNote(melodytrans[i]/2, durationsTrans[i]*4.8);
+        play_drum_L(melodytransGAUCHE[i]);
+        play_drum_R(melodytransDROIT[i]);
     }
     
 
@@ -148,13 +276,17 @@ int main(){
         for (int i = 0; i < 37; i++)
         {
             playNote(melodyP2[i]/2, durationsP2[i]*4.8);
+            play_drum_L(melodyP2GAUCHE[i]);
+            play_drum_R(melodyP2DROIT[i]);
         }
     }
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < 2; j++)
     {
         for (int i = 0; i < 37; i++)
         {
             playNote(melodyP2Bis[i]/2, durationsP2[i]*4.8);
+            play_drum_L(melodyP2GAUCHE[i]);
+            play_drum_R(melodyP2DROIT[i]);
         }
     }
 
