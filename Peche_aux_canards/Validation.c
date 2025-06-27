@@ -207,9 +207,9 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
 
     while(tour < 12)
     {
-        if(markerData -> id != -1 && markerData -> y > 0 || markerData -> y < 4) // Si un marqueur est détecté
+        if(markerData != NULL && markerData->id != -1 && markerData->y > -1 && markerData->y < 1) // Si un marqueur est détecté
         {
-            printf("Un marqueur a été détecté, le robot avance.\n");
+            printf("43534534523 ,Un marqueur a été détecté, le robot avance.Y = %d\n", markerData -> y);
             break; // Sort de la fonction si un marqueur est détecté
         }
 
@@ -221,10 +221,10 @@ void PatternMouvementSiAucunMarqueur(MotorController *motorL, MotorController *m
         MotorController_setTargetSpeed(motorR, 30.0f);
         MotorController_update(motorL);
         MotorController_update(motorR);
-        usleep(500000); // 0.5s de rotation
+        usleep(10000); // 0.5s de rotation
         MotorController_stop(motorL);
         MotorController_stop(motorR);
-        usleep(500000); // 0.5s de rotation
+        sleep(1); // 0.5s de rotation
         tour++;
     }
 
